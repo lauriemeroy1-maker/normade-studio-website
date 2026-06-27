@@ -1,0 +1,602 @@
+/* ==========================================================================
+   1. RESET & CONFIGURATION DE BASE
+   ========================================================================== */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    background: #ffffff; 
+    color: #000000; 
+    overflow-x: hidden; 
+}
+
+
+
+/* ==========================================================================
+   2. HEADER STRUCTURE (STRUCTURE GLOBALE DE L'EN-TÊTE)
+   ========================================================================== */
+/* ==========================================================================
+   2. HEADER & MENU DE NAVIGATION (LIGNE FIXE CONTINU + INDICATEUR MAGIQUE)
+   ========================================================================== */
+.main-header {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: table;      
+    padding: 30px 50px;
+    z-index: 100;        
+    background-color: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.logo-img {
+    height: 42px; 
+    width: auto;           
+    display: block;        
+    transition: opacity 0.3s ease;
+}
+
+.logo-img:hover {
+    opacity: 0.8;          
+}
+
+.nav-menu {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
+/* Le conteneur qui englobe uniquement les mots et la ligne */
+.nav-links-wrapper {
+    display: inline-block;
+    position: relative;
+    padding-bottom: 12px; /* Espace parfait avant la ligne */
+    text-align: left;
+}
+
+.nav-link {
+    font-family: 'Malinton Trial', sans-serif;
+    color: #000000;
+    text-decoration: none;     
+    font-size: 14px;
+    font-weight: normal; 
+    margin-left: 45px; /* Écart parfait entre vos catégories */
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Le premier lien n'a pas besoin de marge à gauche pour démarrer pile au début */
+.nav-link:first-child {
+    margin-left: 0;
+}
+
+/* Changement de graisse uniquement */
+.nav-link:hover,
+.nav-link.active {
+    font-weight: bold;
+}
+
+/* LA LIGNE CONTINU (Commence au début de Works, finit au bout de Contact) */
+.nav-line-bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #e5e5e5; /* La ligne de base (blanche/gris très clair) */
+    border-radius: 10px;
+}
+
+/* LA PARTIE NOIRE MOBILE */
+.nav-line-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: #000000; /* Devient noire */
+    border-radius: 10px;
+    opacity: 0;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+    
+    /* Animation fluide fluide de glissement morphing */
+    transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
+                width 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.2s ease;
+}
+
+/* Reste visible tant que la souris est à l'intérieur du conteneur global */
+.nav-links-wrapper:hover .nav-line-indicator,
+.nav-links-wrapper:focus-within .nav-line-indicator {
+    opacity: 1;
+}
+
+
+/* Étape 1 : S'assurer que le padding ne déforme pas la largeur des éléments */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box; /* Indispensable pour que le padding reste inclus dans la largeur */
+}
+
+/* Étape 2 : Définir la marge de sécurité sur toutes vos sections principales */
+.main-header,
+.cards-container,
+.pricing-section,
+.contact-section {
+    width: 100%;
+    padding-left: 5vw;  /* Marge de sécurité à gauche (5% de la largeur de l'écran) */
+    padding-right: 5vw; /* Marge de sécurité à droite */
+}
+
+/* --- STYLE COMMUN AUX LIGNES DE SÉPARATION --- */
+.pricing-divider,
+.contact-divider {
+    border: none;               /* Supprime le style d'ombre par défaut des navigateurs */
+    border-top: 1px solid #333333; /* Crée une ligne noire fine de 1px */
+    margin-left: auto;          /* Centre la ligne horizontalement */
+    margin-right: auto;         /* Centre la ligne horizontalement */
+}
+
+/* --- LIGNE 1 : SERVICES & PRICING --- */
+.pricing-divider {
+    width: 100%;
+    max-width: 990px;           /* Alignée sur la largeur de votre formulaire de contact */
+    margin-top: 15px;           /* Espace entre le titre "SAY HI !" et la ligne */
+    margin-bottom: 50px;        /* Espace entre la ligne et le début de la boîte de contact */
+}
+
+/* --- LIGNE 2 : CONTACT --- */
+.contact-divider {
+    width: 100%;
+    max-width: 990px;           /* Alignée sur la largeur de votre formulaire de contact */
+    margin-top: 15px;           /* Espace entre le titre "SAY HI !" et la ligne */
+    margin-bottom: 50px;        /* Espace entre la ligne et le début de la boîte de contact */
+}
+
+
+/* ==========================================================================
+   5. MÉCANIQUE DES CARTES ET DE L'EMPILEMENT (GSAP / CSS)
+   ========================================================================== */
+.cards-container { 
+    width: 100%; 
+    margin-top: 100px;         /* Évite que la première carte soit cachée par le header */
+}
+
+.card-section { 
+    width: 100%;
+    margin-bottom: 25vh;
+    height: 75vh; 
+    position: sticky;          /* Fixe la carte lors du défilement */
+    top: 120px;                /* Hauteur d'arrêt de la carte sous le menu */
+    text-align: center; 
+    display: flex; 
+    justify-content: center; 
+}
+
+.card-content { 
+    display: block; 
+    width: 90%; 
+    max-width: 1300px; 
+    height: 100%; 
+    background: #000000; 
+    border-radius: 24px;       /* Coins arrondis des carrés noirs */
+    overflow: hidden;          /* Masque les médias qui dépassent des angles */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    
+    /* Propriétés de départ gérées ensuite par script.js (GSAP) */
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Conteneur interne pour tes images ou vidéos */
+.media-placeholder { 
+    width: 100%; 
+    height: 100%; 
+    color: #ffffff; 
+    display: flex;             /* Centrage horizontal et vertical moderne */
+    align-items: center; 
+    justify-content: center; 
+}
+
+/* ==========================================================================
+   6. ORDRE DE SUPERPOSITION (Z-INDEX) & FIN DE PAGE
+   ========================================================================== */
+#card-1 { z-index: 1; }
+#card-2 { z-index: 2; }
+#card-3 { z-index: 3; }
+#card-4 { z-index: 4; }
+
+/* Espace vide en fin de page pour terminer le défilement proprement */
+.footer-spacer { 
+    height: 10vh; 
+}
+
+/* ==========================================================================
+   7. SECTION SERVICES & PRICING (DESIGN DE LA DEUXIÈME SECTION)
+   ========================================================================== */
+.pricing-section {
+    background-color: #f9f9f6; /* Couleur de fond blanc cassé doux comme sur ta maquette */
+    padding: 50px 50px;
+    text-align: center;
+    position: relative;
+    z-index: 10;               /* Assure que la section s'affiche correctement sous le flux sticky */
+    width: 100%;
+}
+
+.pricing-icon {
+    margin-bottom: 20px;
+    color: #000000;
+}
+
+.pricing-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #000000;
+    margin-bottom: 30px;
+}
+
+
+/* --- CONTENEUR DU MOCKUP --- */
+.card-mockup {
+    width: 100%;
+    height: 160px;             /* Hauteur fixe pour que toutes les images fassent la même taille */
+    background-color: #f7f7f7; /* Fond neutre en attendant que l'image charge */
+    border-radius: 12px;       /* Coins arrondis pour correspondre au style de la carte */
+    overflow: hidden;          /* Force l'image à respecter les coins arrondis du conteneur */
+    margin: 15px 0;            /* Espace au-dessus et en dessous de l'image */
+    border: 1px solid #e0e0e0; /* Bordure fine optionnelle pour détacher le mockup si le fond est blanc */
+}
+
+/* --- IMAGE DU MOCKUP --- */
+/* --- CONTENEUR DU MOCKUP CARRÉ --- */
+.card-mockup {
+    width: 250px;   
+    height: 200px;             
+    margin: 10px auto; 
+    background-color: #f7f7f7; 
+    border-radius: 16px;      
+    overflow: hidden;  
+    border: 1px solid #e0e0e0; 
+}
+
+/* --- IMAGE À L'INTÉRIEUR --- */
+.card-mockup img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;         /* Remplit le carré sans déformer l'image (recadrage propre) */
+    object-position: center;   /* Centre le visuel pour ne pas couper les côtés importants */
+    display: block;
+}
+    object-fit: cover;         /* Remplir le conteneur sans déformer l'image (recadre proprement) */
+    object-position: center;   /* Centre le visuel dans la zone */
+    transition: transform 0.3s ease; /* Petit effet au survol */
+}
+
+/* --- EFFET BONUS AU SURVOL DE LA CARTE --- */
+.pricing-card:hover .card-mockup img {
+    transform: scale(1.03);    /* Zoom très léger sur le visuel quand on survole la carte */
+}
+
+/* GRILLE DES CARTES */
+.pricing-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;                /* Espace horizontal entre les 3 blocs */
+    max-width: 1200px;
+    margin: 0 auto 80px auto;
+    flex-wrap: wrap;          /* Permet de passer à la ligne sur les petits écrans mobiles */
+}
+
+/* --- LISTE DE PUCES (BULLET POINTS) --- */
+.card-features-list {
+    list-style: none;         /* Supprime les puces noires classiques par défaut */
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;         /* Alignement à gauche pour faciliter la lecture d'une liste */
+    flex-grow: 1;             /* Pousse le prix vers le bas uniformément */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;                /* Espace régulier entre chaque point */
+}
+
+.card-features-list li {
+    font-size: 14px;
+    color: #444444;
+    line-height: 1.4;
+    position: relative;
+    padding-left: 20px;       /* Laisse de la place pour la puce personnalisée */
+}
+
+/* Remplacement de la puce par un trait minimaliste ou un symbole discret */
+.card-features-list li::before {
+    content: "—";             /* Vous pouvez remplacer par "✓" si vous préférez des coches */
+    position: absolute;
+    left: 0;
+    color: #000000;           /* Couleur de la puce */
+    font-weight: bold;
+}
+
+/* --- STRUCTURE REVISITÉE POUR S'ADAPTER À LA LISTE --- */
+.pricing-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-sizing: border-box;
+    /* Ajustez la largeur de vos cartes si nécessaire pour accueillir 10 lignes sans trop l'étirer */
+}
+
+.price-tag {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+    margin-top: auto;         /* S'assure que le prix reste calé en bas, peu importe le nombre de puces au-dessus */
+    padding-top: 25px;
+    border-top: 1px dashed #e0e0e0; /* Ligne de séparation fine au-dessus du prix pour structurer */
+}
+
+/* BUTTON VIEW WORKS */
+/* Centre le conteneur du bouton de manière fiable */
+.cta-works-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: -100px;    
+    margin-bottom: 100px;
+}
+
+/* Assure que le bouton se comporte bien comme un bloc cliquable */
+.cta-works-container .cta-button {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none; 
+}
+
+/* Cible spécifiquement l'image avec la classe sub-logo */
+img.sub-logo {
+    width: 120px;     
+    height: auto;  
+    display: block;   
+    margin: 0 auto;  
+}
+
+/* BLOC PRIX EN BAS */
+.card-price {
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 30px;    
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #000000;
+    display: inline-block;
+    width: 100%;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.price-period {
+    font-size: 11px;
+    font-weight: 400;
+    color: #666666;
+}
+
+/* BOUTON DE DECOUVERTE (CTA) */
+.cta-container {
+    width: 100%;
+    text-align: center;
+}
+
+.cta-button {
+    display: inline-block;
+    border: 1px solid #000000;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 16px 40px;
+    border-radius: 99px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #000000;
+    color: #ffffff;            /* Inversion des couleurs au survol */
+}
+
+/* --- SECTION CONTACT GLOBAL --- */
+.contact-section {
+    width: 100%;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff; /* Ajustez selon le fond de votre site */
+}
+
+.contact-title {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+
+/* --- CARTE DU FORMULAIRE --- */
+.contact-card {
+    width: 100%;
+    max-width: 700px; 
+    background-color: #f9f9f6; 
+    border: 1px solid #7c9386; 
+    border-radius: 24px;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Espace entre les blocs de champs */
+}
+
+/* --- CHAMPS DE SAISIE --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre le label au-dessus */
+}
+
+.form-group label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #000000;
+}
+
+.form-group label .mandatory {
+    font-size: 12px;
+    color: #666666;
+    font-weight: normal;
+}
+
+/* Style des inputs et textarea */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+/* Effet focus quand on clique sur un champ */
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #333333;
+}
+
+/* Redimensionnement vertical uniquement pour le message */
+.form-group textarea {
+    resize: vertical;
+}
+
+/* --- BOUTON SEND CENTRÉ --- */
+.form-submit {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.send-button {
+    width: 100%;
+    max-width: 250px; /* Limite la largeur du bouton comme sur l'image */
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.send-button:hover {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+/* ==========================================================================
+   8. DESIGN DU FOOTER (PIED DE PAGE)
+   ========================================================================== */
+.main-footer {
+    background-color: #000000; /* Fond noir profond comme sur l'image */
+    padding-top: 60px;         /* Espace interne haut */
+    padding-bottom: 60px;      /* Espace interne bas */
+}
+
+.footer-container {
+    padding-left: 7vw;
+    padding-right: 7vw;
+    display: flex;
+    justify-content: space-between; /* Pousse le texte à gauche et le logo à droite */
+    align-items: center;            /* Aligne verticalement les deux blocs */
+    width: 100%;
+    max-width: 1300px;              /* Aligné sur la largeur maximale de vos cartes */
+    margin: 0 auto;                 /* Centre l'ensemble du conteneur */
+}
+
+/* Style des textes à gauche */
+.footer-credits {
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-tagline {
+    font-style: italic;
+    font-weight: 500;
+}
+
+.footer-author {
+    opacity: 0.8;
+}
+
+.footer-rights {
+    margin-top: 20px; /* Crée l'écart pour la mention de copyright */
+    opacity: 0.5;
+    font-size: 13px;
+}
+
+/* Style du logo à droite */
+.footer-logo-img {
+    height: 60px; /* Ajustez la hauteur pour correspondre à votre maquette */
+    width: auto;
+    display: block;
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column-reverse; /* Empile les éléments verticalement sur mobile */
+        text-align: center;
+        gap: 40px; /* Espace entre le logo et le texte sur smartphone */
+    }
+    
+    .footer-rights {
+        margin-top: 15px;
+    }
+}
