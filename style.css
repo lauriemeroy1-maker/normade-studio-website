@@ -142,7 +142,7 @@ html, body {
 }
 
 /* ==========================================================================
-   4. INTERACTIVE BOOKS LIBRARY SECTION (#works)
+   4. INTERACTIVE BOOKS LIBRARY SECTION (PC ONLY)
    ========================================================================== */
 .works-library-section {
     width: 100%;
@@ -225,6 +225,11 @@ html, body {
     transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* Infos mobiles cachées par défaut sur PC */
+.mobile-project-info {
+    display: none;
+}
+
 /* Comportement PC uniquement (Hover actif) */
 @media (min-width: 769px) {
     .book-item:hover {
@@ -241,22 +246,6 @@ html, body {
         opacity: 1;
         transform: rotateY(0deg) translateZ(0px);
     }
-}
-
-/* Classe déclenchée par JS sur mobile au clic */
-.book-item.is-active {
-    width: 260px !important; 
-}
-.book-item.is-active .book-card {
-    transform: translateY(-20px) !important; 
-}
-.book-item.is-active .spine {
-    opacity: 0 !important;
-    pointer-events: none;
-}
-.book-item.is-active .cover {
-    opacity: 1 !important;
-    transform: rotateY(0deg) translateZ(0px) !important;
 }
 
 .book-meta {
@@ -558,7 +547,7 @@ img.sub-logo {
 }
 
 .footer-rights {
-    margin-top: 20px; \
+    margin-top: 20px; 
     opacity: 0.5;
     font-size: 13px;
 }
@@ -570,7 +559,7 @@ img.sub-logo {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE / TACTILE ET CONTROLE DU DEPLIAGE MOBILE
+   9. RESPONSIVE COMPLET : GRILLE MOBILE 2x2 À PLAT
    ========================================================================== */
 @media (max-width: 768px) {
     .main-header {
@@ -580,55 +569,79 @@ img.sub-logo {
         margin-left: 20px;
     }
 
-    .works-library-section {
-        padding-top: 100px;
-        padding-left: 0 !important;   
-        padding-right: 0 !important;
-        overflow-x: hidden;
-    }
-
-    .shelf-container {
-        display: flex !important;
-        flex-wrap: nowrap !important; 
-        flex-direction: row !important;
-        overflow-x: auto !important;  
-        overflow-y: hidden !important;
-        
-        /* Accélération matérielle et inertie tactile */
-        -webkit-overflow-scrolling: touch !important; 
-        scroll-behavior: smooth !important;          
-        
-        gap: 16px;
-        padding: 40px 24px !important;         
-        width: 100% !important;
-        min-height: 440px;
-        justify-content: flex-start !important; 
-    }
-
-    .shelf-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    .book-item {
-        height: 340px;           
-        flex-shrink: 0 !important; 
-        transform: translate3d(0,0,0); /* Active le GPU du mobile */
-    }
-
-    .cover {
-        width: 220px; 
-    }
-
-    .book-item.is-active {
-        width: 220px !important; 
-    }
-
+    /* Désactivation de la zone de métadonnées globale PC sur mobile */
     .book-meta {
-        margin-top: 15px;
-        padding: 0 20px;
+        display: none !important;
     }
-    .book-meta h2 {
-        font-size: 1.1rem;
+
+    .works-library-section {
+        padding-top: 110px;
+        padding-bottom: 40px;
+    }
+
+    /* Transformation de la bibliothèque en Grille Mobile 2 par 2 */
+    .shelf-container {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important; 
+        gap: 20px !important;
+        padding: 10px 4vw !important;
+        min-height: auto !important;
+    }
+
+    /* Chaque livre redevient une carte plate cliquable normalement */
+    .book-item {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 3 / 4; 
+        perspective: none !important;
+        transition: none !important;
+    }
+
+    .book-card {
+        width: 100% !important;
+        height: 100% !important;
+        transform-style: flat !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    /* On cache totalement la tranche (spine) sur mobile */
+    .spine {
+        display: none !important;
+    }
+
+    /* La couverture prend toute la place à plat */
+    .cover {
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 1 !important;
+        transform: none !important;
+        border-radius: 12px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Affichage des titres directement sous chaque bloc de couverture */
+    .mobile-project-info {
+        display: block !important;
+        margin-top: 10px;
+        text-align: left;
+    }
+
+    .mobile-project-info h3 {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #000000;
+        margin-bottom: 2px;
+        text-transform: uppercase;
+    }
+
+    .mobile-project-info p {
+        font-size: 10px;
+        font-family: monospace;
+        color: #666666;
+        font-weight: bold;
     }
 
     .footer-container {
