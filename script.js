@@ -1,14 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ==========================================================================
-    // 1. DATA ET METADONNEES DE LA BIBLIOTHEQUE (PC ONLY)
+    // 1. DATA ET METADONNEES DE LA BIBLIOTHEQUE (6 PROJETS ALIGNÉS)
     // ==========================================================================
     const projectsData = [
-        { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       
-        { title: "SPORTS IN MOTION", category: "MOTION DESIGN — 2026" },     
-        { title: "THE KOREAN DREAM", category: "BRANDING & DESIGN" },         
-        { title: "VJING / MOTION", category: "AFTER EFFECTS — DIGITAL" },    
-        { title: "HANJI CRAFTSMANSHIP", category: "TRADITIONAL VISUALS" }    
+        { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       // Index 0
+        { title: "SPORTS IN MOTION", category: "MOTION DESIGN — 2026" },     // Index 1
+        { title: "THE KOREAN DREAM", category: "BRANDING & DESIGN" },         // Index 2
+        { title: "VJING / MOTION", category: "AFTER EFFECTS — DIGITAL" },    // Index 3
+        { title: "HANJI CRAFTSMANSHIP", category: "TRADITIONAL VISUALS" },   // Index 4
+        { title: "NEW CREATIVE", category: "VISUAL ARTS & DESIGN" }          // Index 5 (Nouveau)
     ];
 
     const bookItems = document.querySelectorAll(".book-item");
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Gestion du survol des livres (uniquement actif sur grand écran)
+    // Gestion du survol (PC)
     bookItems.forEach((book) => {
         const index = parseInt(book.getAttribute("data-index"), 10);
         
@@ -43,8 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-
-    // Sur mobile, aucun JS n'intercepte le clic : l'ouverture du lien href est native, directe et instantanée.
 
     // ==========================================================================
     // 2. INDICATEUR DE SURLIGNAGE DU HEADER
@@ -86,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Défilement fluide pour les ancres (#works, #plans, etc.)
+// Défilement fluide pour les ancres
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
@@ -102,4 +101,5 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
 
