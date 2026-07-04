@@ -19,7 +19,7 @@ html, body {
 }
 
 /* ==========================================================================
-   2. HEADER & MENU DE NAVIGATION (LIGNE FIXE CONTINU + INDICATEUR MAGIQUE)
+   2. HEADER & MENU DE NAVIGATION
    ========================================================================== */
 .main-header {
     position: fixed; 
@@ -183,6 +183,7 @@ html, body {
     display: block;
     perspective: 1000px; 
     transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: width; /* Indique au GPU d'anticiper le changement de taille */
 }
 
 .book-card {
@@ -191,6 +192,7 @@ html, body {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
 }
 
 .book-side {
@@ -224,7 +226,6 @@ html, body {
     transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* --- LOGIQUE ACTIVE PARTAGÉE (Hover sur Desktop & Auto-Scroll sur Mobile) --- */
 .book-item:hover,
 .book-item.is-active {
     width: 260px; 
@@ -247,7 +248,6 @@ html, body {
     transform: rotateY(0deg) translateZ(0px);
 }
 
-/* Zone de métadonnées sous les livres */
 .book-meta {
     margin-top: 25px; 
     text-align: center;
@@ -384,15 +384,6 @@ html, body {
 /* ==========================================================================
    6. BUTTONS & CALL TO ACTIONS (CTA)
    ========================================================================== */
-.cta-works-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-top: 40px;    
-    margin-bottom: 20px;
-}
-
 img.sub-logo {
     width: 120px;      
     height: auto;  
@@ -493,11 +484,6 @@ img.sub-logo {
     transition: border-color 0.2s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-    border-color: #333333;
-}
-
 .form-submit {
     display: flex;
     justify-content: center;
@@ -573,7 +559,7 @@ img.sub-logo {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE / MOBILE ADAPTATION (FORÇAGE DU SCROLL HORIZONTAL STRICT)
+   9. RESPONSIVE / ACCÉLÉRATION TACTILE FLUIDE FORCÉE
    ========================================================================== */
 @media (max-width: 768px) {
     .main-header {
@@ -594,24 +580,27 @@ img.sub-logo {
         width: 100%;
     }
 
-    /* Le conteneur bloque l'affichage vertical et force une seule ligne défilable */
     .shelf-container {
         display: flex !important;
-        flex-wrap: nowrap !important; /* EMPÊCHE ABSOLUMENT LE WRAP VERTICAL */
+        flex-wrap: nowrap !important; 
         flex-direction: row !important;
-        overflow-x: scroll !important;  /* Active la glissière horizontale tactile */
+        overflow-x: scroll !important;  
         overflow-y: hidden !important;
-        -webkit-overflow-scrolling: touch; 
+        
+        /* Propriétés critiques pour la fluidité tactile native */
+        -webkit-overflow-scrolling: touch !important; /* Force l'inertie iOS */
+        scroll-behavior: smooth !important;          /* Fluidifie les sauts d'index */
+        
         gap: 12px;
         padding: 40px 0 !important;         
         width: 100% !important;
         min-height: 440px;
         justify-content: flex-start !important; 
-        scroll-snap-type: x mandatory; /* Effet aimant */
-        scroll-padding: 0 40px;  
+        
+        scroll-snap-type: x mandatory; 
+        scroll-padding: 0 45px;  
     }
 
-    /* Masque les barres de défilement moches */
     .shelf-container::-webkit-scrollbar {
         display: none;
     }
@@ -622,11 +611,11 @@ img.sub-logo {
 
     .book-item {
         height: 340px;           
-        flex-shrink: 0 !important; /* Empêche les livres d'être écrasés en largeur */
+        flex-shrink: 0 !important; 
         scroll-snap-align: center; 
+        transform: translate3d(0,0,0); /* Force le rendu par puce graphique */
     }
     
-    /* Crée un espace pour que le premier et le dernier livre puissent se centrer */
     .book-item:first-child {
         margin-left: calc(50vw - 24px) !important; 
     }
@@ -638,7 +627,6 @@ img.sub-logo {
         width: 220px; 
     }
 
-    /* Largeur forcée pour l'élément actif */
     .book-item.is-active {
         width: 220px !important; 
     }
@@ -657,3 +645,4 @@ img.sub-logo {
         gap: 40px; 
     }
 }
+
