@@ -143,7 +143,7 @@ html, body {
 }
 
 /* ==========================================================================
-   4. INTERACTIVE BOOKS LIBRARY SECTION (#works) - ADAPTATION FLEX CORRIGÉE
+   4. INTERACTIVE BOOKS LIBRARY SECTION (#works) - ORDINATEUR
    ========================================================================== */
 .works-library-section {
     width: 100%;
@@ -573,7 +573,7 @@ img.sub-logo {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE / MOBILE ADAPTATION (CORRIGÉ POUR CARROUSEL HORIZONTAL)
+   9. RESPONSIVE / MOBILE ADAPTATION (FORÇAGE DU SCROLL HORIZONTAL STRICT)
    ========================================================================== */
 @media (max-width: 768px) {
     .main-header {
@@ -584,9 +584,9 @@ img.sub-logo {
     }
 
     .works-library-section {
-        padding-top: 120px;
-        padding-left: 0;   
-        padding-right: 0;
+        padding-top: 100px;
+        padding-left: 0 !important;   
+        padding-right: 0 !important;
         overflow-x: hidden;
     }
 
@@ -594,21 +594,24 @@ img.sub-logo {
         width: 100%;
     }
 
+    /* Le conteneur bloque l'affichage vertical et force une seule ligne défilable */
     .shelf-container {
-        display: flex;
-        flex-wrap: nowrap;       
-        overflow-x: auto;        
-        overflow-y: hidden;
+        display: flex !important;
+        flex-wrap: nowrap !important; /* EMPÊCHE ABSOLUMENT LE WRAP VERTICAL */
+        flex-direction: row !important;
+        overflow-x: scroll !important;  /* Active la glissière horizontale tactile */
+        overflow-y: hidden !important;
         -webkit-overflow-scrolling: touch; 
-        gap: 15px;
-        padding: 40px 0;         
-        width: 100%;
-        min-height: 420px;
-        justify-content: flex-start; 
-        scroll-snap-type: x mandatory;
+        gap: 12px;
+        padding: 40px 0 !important;         
+        width: 100% !important;
+        min-height: 440px;
+        justify-content: flex-start !important; 
+        scroll-snap-type: x mandatory; /* Effet aimant */
         scroll-padding: 0 40px;  
     }
 
+    /* Masque les barres de défilement moches */
     .shelf-container::-webkit-scrollbar {
         display: none;
     }
@@ -618,24 +621,26 @@ img.sub-logo {
     }
 
     .book-item {
-        height: 320px;           
-        flex-shrink: 0;          
+        height: 340px;           
+        flex-shrink: 0 !important; /* Empêche les livres d'être écrasés en largeur */
         scroll-snap-align: center; 
     }
+    
+    /* Crée un espace pour que le premier et le dernier livre puissent se centrer */
     .book-item:first-child {
-        margin-left: calc(50vw - 24px); 
+        margin-left: calc(50vw - 24px) !important; 
     }
     .book-item:last-child {
-        margin-right: calc(50vw - 24px);
+        margin-right: calc(50vw - 24px) !important;
     }
 
     .cover {
-        width: 200px; 
+        width: 220px; 
     }
 
-    .book-item:hover,
+    /* Largeur forcée pour l'élément actif */
     .book-item.is-active {
-        width: 200px; 
+        width: 220px !important; 
     }
 
     .book-meta {
