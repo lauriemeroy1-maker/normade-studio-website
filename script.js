@@ -1,124 +1,253 @@
-document.addEventListener("DOMContentLoaded", () => {
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normade Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    // ==========================================================================
-    // 1. DATA ET INTERACTION DE LA BIBLIOTHÈQUE
-    // ==========================================================================
-    const projectsData = [
-        { title: "SEOUL 100K", category: "FULL CREATIVE — 2024~26" },
-        { title: "SPORTS IN MOTION", category: "FULL CREATIVE — 2025~26" },
-        { title: "MOTION GRAPHIC", category: "EDITING — 2025~26" },
-        { title: "THE KOREAN DREAM", category: "DESIGN — 2026" },
-        { title: "K-FOOD EXPO", category: "DESIGN — 2026" },
-        { title: "7979 SEOUL RUNNING CREW", category: "DESIGN — 2025~26" },
-        { title: "2D/3D MOVIES", category: "FULL CREATIVE — 2019~21" }
-    ];
-
-    const bookItems = document.querySelectorAll(".book-item");
-    const metaTitle = document.getElementById("meta-title");
-    const metaCategory = document.getElementById("meta-category");
-
-    function updateMeta(index) {
-        if (index !== null && projectsData[index]) {
-            metaTitle.innerHTML = projectsData[index].title;
-            metaCategory.innerHTML = projectsData[index].category;
-        } else {
-            metaTitle.innerHTML = "&nbsp;";
-            metaCategory.innerHTML = "&nbsp;";
-        }
-    }
-
-    // --- LOGIQUE ORDINATEUR : SURVOL (HOVER) ---
-    bookItems.forEach((book) => {
-        const index = book.getAttribute("data-index");
-        
-        book.addEventListener("mouseenter", () => {
-            if (window.innerWidth > 768) {
-                updateMeta(index);
-            }
-        });
-
-        book.addEventListener("mouseleave", () => {
-            if (window.innerWidth > 768) {
-                updateMeta(null);
-            }
-        });
-    });
-
-    // --- LOGIQUE MOBILE : EFFET HOVER AUTOMATIQUE AU SCROLL (INTERSECTION OBSERVER) ---
-    if (window.innerWidth <= 768) {
-        const observerOptions = {
-            root: null,
-            rootMargin: "-25% 0px -25% 0px", // Cible le quart central vertical de l'écran du mobile
-            threshold: 0.6 // S'active quand 60% du livre est dans cette zone centrale
-        };
-
-        const mobileObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const index = entry.target.getAttribute("data-index");
+    <header class="main-header">
+        <div class="logo">
+            <a href="/">
+                <img src="https://i.ibb.co/whJwwmj5/Normade-Studio-fulllogo-black.png" alt="Normade Studio Logo" class="logo-img">
+            </a>
+        </div>
+          
+        <nav class="nav-menu">
+            <div class="nav-links-wrapper">
+                <a href="#works" class="nav-link">Works</a>
+                <a href="#plans" class="nav-link">Pricing</a>
+                <a href="#contact" class="nav-link">Contact</a>
                 
-                if (entry.isIntersecting) {
-                    // Supprime l'état actif des autres livres et l'applique au livre centré
-                    bookItems.forEach(b => b.classList.remove("is-active"));
-                    entry.target.classList.add("is-active");
-                    updateMeta(index);
-                }
-            });
-        }, observerOptions);
+                <div class="nav-line-bg">
+                    <div class="nav-line-indicator"></div>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-        bookItems.forEach(book => mobileObserver.observe(book));
-    }
+    <section class="works-library-section" id="works">
+        <main class="library-viewport">
+            <h2 class="pricing-title">SELECTED WORKS</h2>
+        <hr class="pricing-divider">
+            <div class="shelf-container">
+              
+                <a href="/projet-barometer.html" class="book-item" data-index="0">
+                    <div class="book-card">
+                        <div class="book-side spine">
+                            <img src="https://i.ibb.co/r2cKyh8Y/web-img-01.png" alt="Tranche 01">
+                        </div>
+                        <div class="book-side cover">
+                            <img src="https://i.ibb.co/F4Kx7Tny/Untitled-1-02.png" alt="Couverture 01">
+                        </div>
+                    </div>
+                </a>
 
-    // ==========================================================================
-    // 2. INDICATEUR DE SURLIGNAGE DU HEADER (NAV MAGIQUE)
-    // ==========================================================================
-    const navWrapper = document.querySelector(".nav-links-wrapper");
-    const navLinks = document.querySelectorAll(".nav-link");
-    const indicator = document.querySelector(".nav-line-indicator");
+                <a href="/projet-motion.html" class="book-item" data-index="1">
+                    <div class="book-card">
+                        <div class="book-side spine">
+                            <img src="https://i.ibb.co/4ZKfn11K/web-img-03.png0" alt="Tranche 02">
+                        </div>
+                        <div class="book-side cover">
+                            <img src="https://i.ibb.co/1G2dDkrp/web-img-04.png" alt="Couverture 02">
+                        </div>
+                    </div>
+                </a>
 
-    function positionIndicator(link) {
-        if (!link || !indicator) return;
-        const wrapperRect = navWrapper.getBoundingClientRect();
-        const linkRect = link.getBoundingClientRect();
+                <a href="/projet-seoul.html" class="book-item" data-index="2">
+                    <div class="book-card">
+                        <div class="book-side spine">
+                            <img src="https://i.ibb.co/HptJY5YH/web-img-09.png" alt="Tranche 03">
+                        </div>
+                        <div class="book-side cover">
+                            <img src="https://i.ibb.co/Ps5GhgTy/web-img-10.png" alt="Couverture 03">
+                        </div>
+                    </div>
+                </a>
 
-        const leftPosition = linkRect.left - wrapperRect.left;
-        const width = linkRect.width;
+                <a href="/projet-liquid.html" class="book-item" data-index="3">
+                    <div class="book-card">
+                        <div class="book-side spine">
+                            <img src="https://i.ibb.co/gMZ8TMwJ/web-img-07.png" alt="Tranche 04">
+                        </div>
+                        <div class="book-side cover">
+                            <img src="https://i.ibb.co/yFCGg7zw/web-img-08.png" alt="Couverture 04">
+                        </div>
+                    </div>
+                </a>
 
-        indicator.style.left = `${leftPosition}px`;
-        indicator.style.width = `${width}px`;
-    }
+                <a href="/projet-hanji.html" class="book-item" data-index="4">
+                    <div class="book-card">
+                        <div class="book-side spine">
+                            <img src="https://i.ibb.co/Pv21nLyc/web-img-13.png" alt="Tranche 05">
+                        </div>
+                        <div class="book-side cover">
+                            <img src="https://i.ibb.co/84KpyxB0/web-img-14.png" alt="Couverture 05">
+                        </div>
+                    </div>
+                </a>
 
-    navLinks.forEach(link => {
-        link.addEventListener("mouseenter", () => positionIndicator(link));
-    });
+                <a href="/projet-gwanaksan.html" class="book-item" data-index="5">
+                    <div class="book-card">
+                        <div class="book-side spine">
+                            <img src="https://i.ibb.co/KjfBSMZs/web-img-11.png0" alt="Tranche 06">
+                        </div>
+                        <div class="book-side cover">
+                            <img src="https://i.ibb.co/XrQdxT2T/web-img-12.png" alt="Couverture 06">
+                        </div>
+                    </div>
+                </a>
 
-    navWrapper.addEventListener("mouseleave", () => {
-        const activeLink = document.querySelector(".nav-link.active");
-        if (activeLink) {
-            positionIndicator(activeLink);
-        } else {
-            if (indicator) indicator.style.width = "0px";
-        }
-    });
+                <a href="/projet-arirang.html" class="book-item" data-index="6">
+                    <div class="book-card">
+                        <div class="book-side spine">
+                            <img src="https://i.ibb.co/5xvfnK5h/web-img-05.png" alt="Tranche 07">
+                        </div>
+                        <div class="book-side cover">
+                            <img src="https://i.ibb.co/XxmWzzf7/web-img-06.png" alt="Couverture 07">
+                        </div>
+                    </div>
+                </a>
 
-    const currentActive = document.querySelector(".nav-link.active");
-    if (currentActive) {
-        positionIndicator(currentActive);
-    }
-});
+            </div>
 
+            <div class="book-meta">
+                <h2 id="meta-title">&nbsp;</h2>
+                <p id="meta-category">&nbsp;</p>
+            </div>
 
-// Défilement fluide
-document.querySelectorAll('a[href="#plans"], [href="#works"], a[href="#contact"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault(); 
-        const targetId = this.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
+        </main>
+    </section>
 
-        if (targetSection) {
-            targetSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
+    <section class="pricing-section" id="plans">
+        <div class="sub-logo">
+            <a href="/">
+                <br><br><br>
+                <img src="https://i.ibb.co/prZGpVHN/Untitled-2-05.png" alt="Sub-logo" class="sub-logo">
+            </a>
+        </div>
+        <br>
+        <h2 class="pricing-title">SERVICES & PRICING</h2>
+        <hr class="pricing-divider">
+      
+        <div class="pricing-grid">
+            
+            <div class="pricing-card">
+                <div class="card-header-icon">🎨</div>
+                <h3 class="card-plan-title">Brand</h3>
+                <br> 
+                <div class="card-mockup">
+                    <img src="https://i.ibb.co/Vpq8Rgvf/01.png" alt="Preview Essential Design">
+                </div>
+                <ul class="card-features-list">
+                    <li>Visual identity & branding</li>
+                    <li>Social media templates</li>
+                    <li>Physical Print Design</li>
+                    <li>Web Design</li>
+                    <li>Delivered in 3 business days</li>
+                    <li>1 project at a time</li>
+                    <li>Unlimited revisions</li>
+                    <li>Dedicated Notion board</li>
+                    <li>Pause or stop anytime</li>
+                </ul>
+                <div class="price-tag">1,800,000 KRW<span class="price-period">/month</span></div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="card-header-icon">🎬</div>
+                <h3 class="card-plan-title">Motion</h3>
+                <br>
+                <div class="card-mockup">
+                    <img src="votre-mockup-motion.png" alt="Preview Motion & Social">
+                </div>
+                <ul class="card-features-list">
+                    <li>Short-form video editing</li>
+                    <li>Long-form video production</li>
+                    <li>Custom motion graphics & Vjing</li>
+                    <li>Sound design & audio mixing</li>
+                    <li>Thumbnail & title design</li>
+                    <li>1 active projects at a time</li>
+                    <li>Unlimited revisions</li>
+                    <li>Source files included</li>
+                    <li>Pause or stop anytime</li>
+                </ul>
+                <div class="price-tag">2,500,000 KRW<span class="price-period">/month</span></div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="card-header-icon">📷</div>
+                <h3 class="card-plan-title">Full Creative</h3>
+                <br>
+                <div class="card-mockup">
+                    <img src="votre-mockup-full.png" alt="Preview Creative Partner">
+                </div>
+                <ul class="card-features-list">
+                    <li>Everything in Design + Motion</li>
+                    <li>On-site photo & video shooting <br> twice a month</li> 
+                    <li>Full creative direction</li>
+                    <li>Priority workflow & execution</li>
+                    <li>Unlimited active requests</li>
+                    <li>Source files included</li>
+                    <li>Project folders included</li>
+                    <li>Pause or stop anytime</li>
+                </ul>
+                <div class="price-tag">4,500,000 KRW<span class="price-period">/month</span></div>
+            </div>
+
+        </div>
+
+        <div class="btn-container">
+            <a href="#contact" class="cta-button">BOOK A DISCOVERY CALL</a>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <br><br><br>
+        <h2 class="contact-title">SAY HI !</h2>
+        <hr class="contact-divider">
+      
+        <div class="contact-card">
+            <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+                <input type="hidden" name="access_key" value="b6f65d6a-7605-442b-a678-8c960f0dd45f">
+                <input type="hidden" name="subject" value="Nouveau message depuis le portfolio">
+
+                <div class="form-group">
+                    <label for="name">Name / Company <span class="mandatory">(Mandatory)</span></label>
+                    <input type="text" id="name" name="Sender Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail <span class="mandatory">(Mandatory)</span></label>
+                    <input type="email" id="email" name="Sender email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message <span class="mandatory">(Mandatory)</span></label>
+                    <textarea id="message" name="Sender message" rows="6" required></textarea>
+                </div>
+
+                <div class="form-submit">
+                    <button type="submit" class="send-button">Send</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-credits">
+                <p class="footer-tagline">“Creativity in hands”</p>
+                <p class="footer-author">by normade studio</p>
+                <p class="footer-rights">© 2026 all rights reserved</p>
+            </div>
+            <div class="footer-logo">
+                <img src="https://i.ibb.co/VYV9hqWn/Normade-Studio-fulllogo-white.png" alt="Normade Studio" class="footer-logo-img">
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
