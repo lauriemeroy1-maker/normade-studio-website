@@ -44,43 +44,46 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- LOGIQUE MOBILE : EFFET HOVER AUTOMATIQUE AU SCROLL HORIZONTAL (INTERSECTION OBSERVER) ---
+    // --- LOGIQUE MOBILE : EFFET AUTOMATIQUE AU SCROLL HORIZONTAL (INTERSECTION OBSERVER ENTIÈREMENT DYNAMIQUE) ---
     let mobileObserver = null;
 
     function initMobileObserver() {
-        if (window.innerWidth <= 768 && !mobileObserver) {
-            const observerOptions = {
-                root: document.querySelector('.shelf-container'), 
-                rootMargin: "0px -40% 0px -40%", 
-                threshold: 0.1 
-            };
+        if (window.innerWidth <= 768) {
+            if (!mobileObserver) {
+                const observerOptions = {
+                    root: document.querySelector('.shelf-container'), 
+                    rootMargin: "0px -42% 0px -42%", 
+                    threshold: 0.05
+                };
 
-            mobileObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const index = entry.target.getAttribute("data-index");
-                    
-                    if (entry.isIntersecting) {
-                        bookItems.forEach(b => b.classList.remove("is-active"));
-                        entry.target.classList.add("is-active");
-                        updateMeta(index);
-                    }
-                });
-            }, observerOptions);
+                mobileObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const index = entry.target.getAttribute("data-index");
+                        
+                        if (entry.isIntersecting) {
+                            bookItems.forEach(b => b.classList.remove("is-active"));
+                            entry.target.classList.add("is-active");
+                            updateMeta(index);
+                        }
+                    });
+                }, observerOptions);
 
-            bookItems.forEach(book => mobileObserver.observe(book));
-        } 
-        else if (window.innerWidth > 768 && mobileObserver) {
-            mobileObserver.disconnect();
-            mobileObserver = null;
-            bookItems.forEach(b => b.classList.remove("is-active"));
-            updateMeta(null);
+                bookItems.forEach(book => mobileObserver.observe(book));
+            }
+        } else {
+            if (mobileObserver) {
+                mobileObserver.disconnect();
+                mobileObserver = null;
+                bookItems.forEach(b => b.classList.remove("is-active"));
+                updateMeta(null);
+            }
         }
     }
 
-    // Lancer au chargement initial
+    // Initialisation
     initMobileObserver();
 
-    // Écouter le redimensionnement pour recalculer l'observateur si l'on change d'appareil/orientation
+    // Gestion propre du redimensionnement de la fenêtre
     let resizeTimeout;
     window.addEventListener("resize", () => {
         clearTimeout(resizeTimeout);
