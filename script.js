@@ -42,48 +42,41 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- LOGIQUE MOBILE : INTERSECTION OBSERVER ADAPTÉ AUX PAYSAGES TACTILES ---
-    let mobileObserver = null;
+    // --- LOGIQUE MOBILE : ACTION EN DEUX TEMPS (TRANCHE -> FACE -> PROJET) ---
+    bookItems.forEach((book) => {
+        book.addEventListener("click", function(e) {
+            if (window.innerWidth <= 768) {
+                const index = parseInt(this.getAttribute("data-index"), 10);
 
-    function initMobileObserver() {
-        if (window.innerWidth <= 768) {
-            if (!mobileObserver) {
-                const observerOptions = {
-                    root: document.querySelector('.shelf-container'), 
-                    rootMargin: "0px -30% 0px -30%", 
-                    threshold: 0.1
-                };
-
-                mobileObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        const index = parseInt(entry.target.getAttribute("data-index"), 10);
-                        
-                        if (entry.isIntersecting) {
-                            bookItems.forEach(b => b.classList.remove("is-active"));
-                            entry.target.classList.add("is-active");
-                            updateMeta(index);
-                        }
-                    });
-                }, observerOptions);
-
-                bookItems.forEach(book => mobileObserver.observe(book));
+                // Si le livre n'est pas encore actif (il montre sa tranche)
+                if (!this.classList.contains("is-active")) {
+                    
+                    // Bloque l'ouverture directe du lien href
+                    e.preventDefault();
+                    
+                    // Ferme le livre précédemment ouvert si l'utilisateur change d'avis
+                    bookItems.forEach(b => b.classList.remove("is-active"));
+                    
+                    // Ouvre le livre actuel pour montrer sa face
+                    this.classList.add("is-active");
+                    
+                    // Affiche les métadonnées correspondantes en bas
+                    updateMeta(index);
+                }
+                // Si le livre a déjà la classe "is-active", e.preventDefault() n'est pas appelé
+                // et le deuxième clic ouvrira naturellement l'URL contenue dans le href.
             }
-        } else {
-            if (mobileObserver) {
-                mobileObserver.disconnect();
-                mobileObserver = null;
+        });
+    });
+
+    // Fermer le livre ouvert si l'utilisateur clique en dehors de la bibliothèque sur mobile
+    document.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+            if (!e.target.closest('.book-item') && !e.target.closest('.shelf-container')) {
                 bookItems.forEach(b => b.classList.remove("is-active"));
                 updateMeta(null);
             }
         }
-    }
-
-    initMobileObserver();
-
-    let resizeTimeout;
-    window.addEventListener("resize", () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(initMobileObserver, 150);
     });
 
     // ==========================================================================
@@ -142,4 +135,3 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
-
