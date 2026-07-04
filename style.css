@@ -168,7 +168,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center; 
-    flex-wrap: wrap;        /* Permet aux livres de s'adapter dynamiquement sur plusieurs lignes si l'écran rétrécit */
+    flex-wrap: wrap;        
     gap: 12px;
     width: 100%;
     min-height: 440px;
@@ -573,26 +573,77 @@ img.sub-logo {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE / MOBILE ADAPTATION
+   9. RESPONSIVE / MOBILE ADAPTATION (CORRIGÉ POUR CARROUSEL HORIZONTAL)
    ========================================================================== */
 @media (max-width: 768px) {
+    .main-header {
+        padding: 20px 5vw;
+    }
+    .nav-link {
+        margin-left: 20px;
+    }
+
+    .works-library-section {
+        padding-top: 120px;
+        padding-left: 0;   
+        padding-right: 0;
+        overflow-x: hidden;
+    }
+
+    .library-viewport {
+        width: 100%;
+    }
+
     .shelf-container {
-        gap: 10px;
-        justify-content: center; /* Reste centré même sur petit écran tactile */
-        padding: 20px;
+        display: flex;
+        flex-wrap: nowrap;       
+        overflow-x: auto;        
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch; 
+        gap: 15px;
+        padding: 40px 0;         
+        width: 100%;
+        min-height: 420px;
+        justify-content: flex-start; 
+        scroll-snap-type: x mandatory;
+        scroll-padding: 0 40px;  
+    }
+
+    .shelf-container::-webkit-scrollbar {
+        display: none;
+    }
+    .shelf-container {
+        -ms-overflow-style: none;  
+        scrollbar-width: none;  
     }
 
     .book-item {
-        height: 340px; /* Légère réduction pour s'adapter aux écrans des smartphones */
+        height: 320px;           
+        flex-shrink: 0;          
+        scroll-snap-align: center; 
+    }
+    .book-item:first-child {
+        margin-left: calc(50vw - 24px); 
+    }
+    .book-item:last-child {
+        margin-right: calc(50vw - 24px);
     }
 
     .cover {
-        width: 220px; /* Ajustement de la largeur déployée sur mobile */
+        width: 200px; 
     }
 
     .book-item:hover,
     .book-item.is-active {
-        width: 220px; 
+        width: 200px; 
+    }
+
+    .book-meta {
+        margin-top: 15px;
+        padding: 0 20px;
+    }
+    .book-meta h2 {
+        font-size: 1.1rem;
     }
 
     .footer-container {
