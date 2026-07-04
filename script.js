@@ -1,16 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ==========================================================================
-    // 1. DATA ET INTERACTION DE LA BIBLIOTHÈQUE (INDEXATION RE-SYNCHRONISÉE)
+    // 1. DATA ET INTERACTION DE LA BIBLIOTHÈQUE (5 PROJETS RECONFIGURÉS)
     // ==========================================================================
     const projectsData = [
-        { title: "TOUR DE GYEONGNAM 2026", category: "BRANDING — BAROMETER" }, // Index 0 (Barometer)
-        { title: "SPORTS IN MOTION", category: "MOTION DESIGN — 2026" },     // Index 1 (Motion)
-        { title: "SEOUL EXPLORATION", category: "CREATIVE DIRECTION" },       // Index 2 (Seoul)
-        { title: "LIQUID GLASS EFFECT", category: "AFTER EFFECTS — 2D/3D" }, // Index 3 (Liquid)
-        { title: "HANJI CRAFTSMANSHIP", category: "TRADITIONAL ART" },       // Index 4 (Hanji)
-        { title: "GWANAKSAN HIKING", category: "GPS TRACKS & VISUALS" },     // Index 5 (Gwanaksan)
-        { title: "ARIRANG HERITAGE", category: "TRADITIONAL CULTURE" }       // Index 6 (Arirang)
+        { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       // Index 0
+        { title: "SPORTS IN MOTION", category: "MOTION DESIGN — 2026" },     // Index 1
+        { title: "THE KOREAN DREAM", category: "BRANDING & DESIGN" },         // Index 2
+        { title: "VJING / MOTION", category: "AFTER EFFECTS — DIGITAL" },    // Index 3
+        { title: "HANJI CRAFTSMANSHIP", category: "TRADITIONAL VISUALS" }    // Index 4
     ];
 
     const bookItems = document.querySelectorAll(".book-item");
@@ -44,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- LOGIQUE MOBILE : EMPECHE LE BUG AVEC UN INTERSECTION OBSERVER SECURISE ---
+    // --- LOGIQUE MOBILE : INTERSECTION OBSERVER ADAPTÉ AUX PAYSAGES TACTILES ---
     let mobileObserver = null;
 
     function initMobileObserver() {
@@ -52,8 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!mobileObserver) {
                 const observerOptions = {
                     root: document.querySelector('.shelf-container'), 
-                    rootMargin: "0px -35% 0px -35%", // Ajusté pour cibler précisément le livre au centre de l'écran mobile
-                    threshold: 0.2
+                    rootMargin: "0px -30% 0px -30%", 
+                    threshold: 0.1
                 };
 
                 mobileObserver = new IntersectionObserver((entries) => {
@@ -80,10 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Lancement immédiat au chargement
     initMobileObserver();
 
-    // Gestion propre du redimensionnement de l'écran sans freeze
     let resizeTimeout;
     window.addEventListener("resize", () => {
         clearTimeout(resizeTimeout);
@@ -91,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================================================
-    // 2. INDICATEUR DE SURLIGNAGE DU HEADER (NAV MAGIQUE SECURISEE)
+    // 2. INDICATEUR DE SURLIGNAGE DU HEADER
     // ==========================================================================
     const navWrapper = document.querySelector(".nav-links-wrapper");
     const navLinks = document.querySelectorAll(".nav-link");
@@ -123,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Positionnement initial si un lien est actif par défaut
         const currentActive = document.querySelector(".nav-link.active");
         if (currentActive) {
             positionIndicator(currentActive);
