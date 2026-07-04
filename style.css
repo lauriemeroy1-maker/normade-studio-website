@@ -121,7 +121,6 @@ html, body {
    3. STRUCTURE DES MARGES DE SÉCURITÉ ET DIVISEURS
    ========================================================================== */
 .main-header,
-.cards-container,
 .pricing-section,
 .contact-section,
 .works-library-section {
@@ -143,7 +142,7 @@ html, body {
 }
 
 /* ==========================================================================
-   4. INTERACTIVE BOOKS LIBRARY SECTION (#works) - ORDINATEUR
+   4. INTERACTIVE BOOKS LIBRARY SECTION (#works)
    ========================================================================== */
 .works-library-section {
     width: 100%;
@@ -183,7 +182,7 @@ html, body {
     display: block;
     perspective: 1000px; 
     transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    will-change: width; /* Indique au GPU d'anticiper le changement de taille */
+    will-change: width;
 }
 
 .book-card {
@@ -226,26 +225,38 @@ html, body {
     transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.book-item:hover,
+/* Comportement PC uniquement (Hover actif) */
+@media (min-width: 769px) {
+    .book-item:hover {
+        width: 260px; 
+    }
+    .book-item:hover .book-card {
+        transform: translateY(-20px); 
+    }
+    .book-item:hover .spine {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .book-item:hover .cover {
+        opacity: 1;
+        transform: rotateY(0deg) translateZ(0px);
+    }
+}
+
+/* Classe déclenchée par JS sur mobile au clic */
 .book-item.is-active {
-    width: 260px; 
+    width: 260px !important; 
 }
-
-.book-item:hover .book-card,
 .book-item.is-active .book-card {
-    transform: translateY(-20px); 
+    transform: translateY(-20px) !important; 
 }
-
-.book-item:hover .spine,
 .book-item.is-active .spine {
-    opacity: 0;
+    opacity: 0 !important;
     pointer-events: none;
 }
-
-.book-item:hover .cover,
 .book-item.is-active .cover {
-    opacity: 1;
-    transform: rotateY(0deg) translateZ(0px);
+    opacity: 1 !important;
+    transform: rotateY(0deg) translateZ(0px) !important;
 }
 
 .book-meta {
@@ -547,7 +558,7 @@ img.sub-logo {
 }
 
 .footer-rights {
-    margin-top: 20px; 
+    margin-top: 20px; \
     opacity: 0.5;
     font-size: 13px;
 }
@@ -559,7 +570,7 @@ img.sub-logo {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE / ACCÉLÉRATION TACTILE FLUIDE FORCÉE
+   9. RESPONSIVE / TACTILE ET CONTROLE DU DEPLIAGE MOBILE
    ========================================================================== */
 @media (max-width: 768px) {
     .main-header {
@@ -576,51 +587,32 @@ img.sub-logo {
         overflow-x: hidden;
     }
 
-    .library-viewport {
-        width: 100%;
-    }
-
     .shelf-container {
         display: flex !important;
         flex-wrap: nowrap !important; 
         flex-direction: row !important;
-        overflow-x: scroll !important;  
+        overflow-x: auto !important;  
         overflow-y: hidden !important;
         
-        /* Propriétés critiques pour la fluidité tactile native */
-        -webkit-overflow-scrolling: touch !important; /* Force l'inertie iOS */
-        scroll-behavior: smooth !important;          /* Fluidifie les sauts d'index */
+        /* Accélération matérielle et inertie tactile */
+        -webkit-overflow-scrolling: touch !important; 
+        scroll-behavior: smooth !important;          
         
-        gap: 12px;
-        padding: 40px 0 !important;         
+        gap: 16px;
+        padding: 40px 24px !important;         
         width: 100% !important;
         min-height: 440px;
         justify-content: flex-start !important; 
-        
-        scroll-snap-type: x mandatory; 
-        scroll-padding: 0 45px;  
     }
 
     .shelf-container::-webkit-scrollbar {
         display: none;
     }
-    .shelf-container {
-        -ms-overflow-style: none;  
-        scrollbar-width: none;  
-    }
 
     .book-item {
         height: 340px;           
         flex-shrink: 0 !important; 
-        scroll-snap-align: center; 
-        transform: translate3d(0,0,0); /* Force le rendu par puce graphique */
-    }
-    
-    .book-item:first-child {
-        margin-left: calc(50vw - 24px) !important; 
-    }
-    .book-item:last-child {
-        margin-right: calc(50vw - 24px) !important;
+        transform: translate3d(0,0,0); /* Active le GPU du mobile */
     }
 
     .cover {
