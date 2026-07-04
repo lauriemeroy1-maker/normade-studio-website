@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ==========================================================================
-    // 1. DATA ET INTERACTION DE LA BIBLIOTHÈQUE
+    // 1. DATA ET INTERACTION DE LA BIBLIOTHÈQUE (INDEXATION RE-SYNCHRONISÉE)
     // ==========================================================================
     const projectsData = [
-        { title: "SEOUL 100K", category: "FULL CREATIVE — 2024~26" },
-        { title: "SPORTS IN MOTION", category: "FULL CREATIVE — 2025~26" },
-        { title: "MOTION GRAPHIC", category: "EDITING — 2025~26" },
-        { title: "THE KOREAN DREAM", category: "DESIGN — 2026" },
-        { title: "K-FOOD EXPO", category: "DESIGN — 2026" },
-        { title: "7979 SEOUL RUNNING CREW", category: "DESIGN — 2025~26" },
-        { title: "2D/3D MOVIES", category: "FULL CREATIVE — 2019~21" }
+        { title: "TOUR DE GYEONGNAM 2026", category: "BRANDING — BAROMETER" }, // Index 0 (Barometer)
+        { title: "SPORTS IN MOTION", category: "MOTION DESIGN — 2026" },     // Index 1 (Motion)
+        { title: "SEOUL EXPLORATION", category: "CREATIVE DIRECTION" },       // Index 2 (Seoul)
+        { title: "LIQUID GLASS EFFECT", category: "AFTER EFFECTS — 2D/3D" }, // Index 3 (Liquid)
+        { title: "HANJI CRAFTSMANSHIP", category: "TRADITIONAL ART" },       // Index 4 (Hanji)
+        { title: "GWANAKSAN HIKING", category: "GPS TRACKS & VISUALS" },     // Index 5 (Gwanaksan)
+        { title: "ARIRANG HERITAGE", category: "TRADITIONAL CULTURE" }       // Index 6 (Arirang)
     ];
 
     const bookItems = document.querySelectorAll(".book-item");
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateMeta(index) {
         if (index !== null && projectsData[index]) {
-            metaTitle.innerHTML = projectsData[index].title;
-            metaCategory.innerHTML = projectsData[index].category;
+            metaTitle.innerText = projectsData[index].title;
+            metaCategory.innerText = projectsData[index].category;
         } else {
             metaTitle.innerHTML = "&nbsp;";
             metaCategory.innerHTML = "&nbsp;";
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- LOGIQUE ORDINATEUR : SURVOL (HOVER) ---
     bookItems.forEach((book) => {
-        const index = book.getAttribute("data-index");
+        const index = parseInt(book.getAttribute("data-index"), 10);
         
         book.addEventListener("mouseenter", () => {
             if (window.innerWidth > 768) {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- LOGIQUE MOBILE : EFFET AUTOMATIQUE AU SCROLL HORIZONTAL (INTERSECTION OBSERVER ENTIÈREMENT DYNAMIQUE) ---
+    // --- LOGIQUE MOBILE : EMPECHE LE BUG AVEC UN INTERSECTION OBSERVER SECURISE ---
     let mobileObserver = null;
 
     function initMobileObserver() {
@@ -52,13 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!mobileObserver) {
                 const observerOptions = {
                     root: document.querySelector('.shelf-container'), 
-                    rootMargin: "0px -42% 0px -42%", 
-                    threshold: 0.05
+                    rootMargin: "0px -35% 0px -35%", // Ajusté pour cibler précisément le livre au centre de l'écran mobile
+                    threshold: 0.2
                 };
 
                 mobileObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
-                        const index = entry.target.getAttribute("data-index");
+                        const index = parseInt(entry.target.getAttribute("data-index"), 10);
                         
                         if (entry.isIntersecting) {
                             bookItems.forEach(b => b.classList.remove("is-active"));
@@ -80,10 +80,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Initialisation
+    // Lancement immédiat au chargement
     initMobileObserver();
 
-    // Gestion propre du redimensionnement de la fenêtre
+    // Gestion propre du redimensionnement de l'écran sans freeze
     let resizeTimeout;
     window.addEventListener("resize", () => {
         clearTimeout(resizeTimeout);
@@ -91,14 +91,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================================================
-    // 2. INDICATEUR DE SURLIGNAGE DU HEADER (NAV MAGIQUE)
+    // 2. INDICATEUR DE SURLIGNAGE DU HEADER (NAV MAGIQUE SECURISEE)
     // ==========================================================================
     const navWrapper = document.querySelector(".nav-links-wrapper");
     const navLinks = document.querySelectorAll(".nav-link");
     const indicator = document.querySelector(".nav-line-indicator");
 
     function positionIndicator(link) {
-        if (!link || !indicator) return;
+        if (!link || !indicator || !navWrapper) return;
         const wrapperRect = navWrapper.getBoundingClientRect();
         const linkRect = link.getBoundingClientRect();
 
@@ -109,33 +109,37 @@ document.addEventListener("DOMContentLoaded", () => {
         indicator.style.width = `${width}px`;
     }
 
-    navLinks.forEach(link => {
-        link.addEventListener("mouseenter", () => positionIndicator(link));
-    });
+    if (navLinks.length > 0 && indicator) {
+        navLinks.forEach(link => {
+            link.addEventListener("mouseenter", () => positionIndicator(link));
+        });
 
-    navWrapper.addEventListener("mouseleave", () => {
-        const activeLink = document.querySelector(".nav-link.active");
-        if (activeLink) {
-            positionIndicator(activeLink);
-        } else {
-            if (indicator) indicator.style.width = "0px";
+        navWrapper.addEventListener("mouseleave", () => {
+            const activeLink = document.querySelector(".nav-link.active");
+            if (activeLink) {
+                positionIndicator(activeLink);
+            } else {
+                indicator.style.width = "0px";
+            }
+        });
+
+        // Positionnement initial si un lien est actif par défaut
+        const currentActive = document.querySelector(".nav-link.active");
+        if (currentActive) {
+            positionIndicator(currentActive);
         }
-    });
-
-    const currentActive = document.querySelector(".nav-link.active");
-    if (currentActive) {
-        positionIndicator(currentActive);
     }
 });
 
-// Défilement fluide
-document.querySelectorAll('a[href="#plans"], [href="#works"], a[href="#contact"]').forEach(anchor => {
+// Défilement fluide pour les ancres
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault(); 
         const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
         const targetSection = document.querySelector(targetId);
-
         if (targetSection) {
+            e.preventDefault(); 
             targetSection.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
@@ -143,3 +147,4 @@ document.querySelectorAll('a[href="#plans"], [href="#works"], a[href="#contact"]
         }
     });
 });
+
