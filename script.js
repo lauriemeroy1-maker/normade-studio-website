@@ -108,7 +108,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
         if (targetId === '#') return;
-        
+
+        // Cas particulier : "Works" doit ramener tout en haut de la page (vidéo incluse)
+        if (targetId === '#works') {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            return;
+        }
+
         const targetSection = document.querySelector(targetId);
         if (targetSection) {
             e.preventDefault(); 
