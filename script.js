@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================================================
-    // 1. SURVOL ET LOGIQUE INTERACTIVE DE DRAG & DROP (GRAVITÉ)
+    // 1. SYSTEME INTERACTIF DE GLISSEMENT DE COUVERTURE & GRAVITE RETOUR
     // ==========================================================================
     const projectsData = [
         { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       
@@ -44,18 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Variables globales pour le moteur de drag & drop
     let activeItem = null;
     let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let hasMovedSignificant = false; // Permet de faire la diff entre un simple clic et un glissé
+    let startX = 0, startY = 0;
+    let currentX = 0, currentY = 0;
+    let hasMoved = false;
 
     bookItems.forEach((book) => {
         const index = parseInt(book.getAttribute("data-index"), 10);
-        const card = book.querySelector('.book-card');
         
         book.addEventListener("mouseenter", () => {
             if (window.innerWidth > 768 && !isDragging) updateMeta(index);
@@ -65,23 +61,20 @@ document.addEventListener("DOMContentLoaded", () => {
             if (window.innerWidth > 768 && !isDragging) updateMeta(null);
         });
 
-        // Empêcher l'action par défaut du lien au clic direct s'il y a eu déplacement
+        // Bloque l'ouverture de lien si le livre a été déplacé
         book.addEventListener("click", (e) => {
-            if (hasMovedSignificant) {
+            if (hasMoved) {
                 e.preventDefault();
             }
         });
 
-        // Début du clic-hold
         book.addEventListener("mousedown", (e) => {
-            if (window.innerWidth <= 768) return; // Désactivé sur mobile pour le scroll fluide
-            
-            // Ne s'active qu'avec le clic gauche principal
-            if (e.button !== 0) return;
+            if (window.innerWidth <= 768) return; 
+            if (e.button !== 0) return; // Clic gauche uniquement
 
             activeItem = book;
             isDragging = true;
-            hasMovedSignificant = false;
+            hasMoved = false;
             
             book.classList.remove("returning");
             book.classList.add("dragging");
@@ -93,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Écoute globale des mouvements pour un drag fluide
     window.addEventListener("mousemove", (e) => {
         if (!isDragging || !activeItem) return;
 
@@ -103,16 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
         currentX = e.clientX - startX;
         currentY = e.clientY - startY;
 
-        // Seuil physique pour valider l'action de drag
-        if (Math.abs(currentX) > 5 || Math.abs(currentY) > 5) {
-            hasMovedSignificant = true;
+        if (Math.abs(currentX) > 6 || Math.abs(currentY) > 6) {
+            hasMoved = true;
         }
 
-        // Translation en temps réel sous la souris
-        card.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.04)`;
+        // Déplace physiquement la carte sous le curseur
+        card.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.03)`;
     });
 
-    // Relâchement (effet Gravité / Ressort)
     window.addEventListener("mouseup", () => {
         if (!isDragging || !activeItem) return;
 
@@ -122,25 +112,24 @@ document.addEventListener("DOMContentLoaded", () => {
         activeItem.classList.add("returning");
 
         if (card) {
-            // Remise à zéro immédiate de la position (la physique amortie est gérée par la transition CSS .returning)
-            card.style.transform = `translate(0px, 0px)`;
+            // Relâchement : retour à l'origine avec la physique CSS cubique
+            card.style.transform = "translate(0px, 0px)";
         }
 
-        // Si l'utilisateur a simplement fait un clic rapide sans déplacer l'élément, on suit le lien du projet
-        if (!hasMovedSignificant) {
+        // Si simple clic hold sans bouger d'un poil : ouvre le projet
+        if (!hasMoved) {
             const targetUrl = activeItem.getAttribute("href");
             if (targetUrl && targetUrl !== "#") {
                 window.location.href = targetUrl;
             }
         }
 
-        // Reset des états
         isDragging = false;
         activeItem = null;
     });
 
     // ==========================================================================
-    // 2. INDICATEUR DE SURLIGNAGE DE LA BARRE DE NAVIGATION
+    // 2. INDICATEUR DE DE DE LA BARRE DE NAVIGATION
     // ==========================================================================
     const navWrapper = document.querySelector(".nav-links-wrapper");
     const navLinks = document.querySelectorAll(".nav-link");
@@ -166,24 +155,4 @@ document.addEventListener("DOMContentLoaded", () => {
             else indicator.style.width = "0px";
         });
     }
-});
-
-// Déplacement fluide vers les ancres
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-
-        if (targetId === '#works') {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-
-        const targetSection = document.querySelector(targetId);
-        if (targetSection) {
-            e.preventDefault(); 
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
 });
