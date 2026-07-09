@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================================================
-    // 1. GESTION TEXTES ET OUVERTURE DE LIGHTBOX (MODALE LOGIQUE)
+    // 1. GESTION TEXTES ET OUVERTURE DE LIGHTBOX
     // ==========================================================================
     const projectsData = [
         { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       
@@ -68,17 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const mobileInfoElement = book.querySelector(".mobile-project-info");
 
         const openProjectAction = (e) => {
-            const imageUrl = book.getAttribute("data-image");
-            
-            // Sécurité : n'ouvre la modale que s'il y a un lien valide configuré dans data-image !
-            if (!imageUrl || imageUrl.trim() === "") {
-                return; 
-            }
-
             e.preventDefault(); 
             e.stopPropagation(); 
             
-            if (lightbox && lightboxImg) {
+            const imageUrl = book.getAttribute("data-image");
+            if (imageUrl && lightbox && lightboxImg) {
                 lightboxImg.src = imageUrl;
                 lightbox.style.display = "block";
                 document.body.classList.add("lightbox-active");
@@ -118,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================================================
-    // 2. INDICATEUR DE SURLIGNAGE DE BARRE DE NAVIGATION
+    // 2. INDICATEUR DE DE SURLIGNAGE DE BARRE DE NAVIGATION
     // ==========================================================================
     const navWrapper = document.querySelector(".nav-links-wrapper");
     const navLinks = document.querySelectorAll(".nav-link");
