@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     bookItems.forEach((book) => {
         const index = parseInt(book.getAttribute("data-index"), 10);
         
-        // Événements Hover (PC uniquement)
         book.addEventListener("mouseenter", () => {
             if (window.innerWidth > 768) updateMeta(index);
         });
@@ -58,33 +57,26 @@ document.addEventListener("DOMContentLoaded", () => {
             if (window.innerWidth > 768) updateMeta(null);
         });
 
-        // LOGIQUE DE CLIC : EFFET DE TRANSITION AVEC ZOOM IMMERSIF
+        // EFFET DE MULTI-TRANSITION IMMERSIVE AU CLIC
         book.addEventListener("click", function(e) {
             const targetUrl = this.getAttribute("href");
-
-            // Si le lien n'est pas configuré, on laisse le comportement par défaut
             if (!targetUrl || targetUrl === "#") return;
 
-            e.preventDefault(); // Bloque le changement brutal de page
+            e.preventDefault(); 
 
-            // Active les verrous CSS de transition globale
             document.body.classList.add("zoom-active");
             if (shelfContainer) shelfContainer.classList.add("zoom-active");
             
-            // Fixe l'élément au centre virtuel avant l'accélération matérielle
             book.classList.add("zoomed-click");
             
-            // Force le rafraîchissement d'affichage pour démarrer la transition de scale
             requestAnimationFrame(() => {
                 book.classList.add("scale-up");
             });
 
-            // Enclencher le rideau noir (Fade-in noir) pendant le grandissement
             setTimeout(() => {
                 if (overlay) overlay.classList.add("fade-black");
             }, 320);
 
-            // Redirection définitive vers la page dédiée du projet
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 750);
@@ -120,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Smooth Scroll fluide pour les ancres de la page d'accueil
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
