@@ -288,6 +288,7 @@ html, body {
     transform: rotateY(-30deg) translateZ(-10px);
     transform-origin: left center;
     transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer; /* Indique clairement que la couverture est cliquable */
 }
 
 .mobile-project-info {
@@ -691,4 +692,62 @@ img.sub-logo {
         text-align: center;
         gap: 40px; 
     }
+}
+
+/* ==========================================================================
+   STYLE COMPLET DE LA VISIONNEUSE LIGHTBOX (FLOU + SCROLL DU PROJET)
+   ========================================================================== */
+.lightbox {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000; /* Priorité absolue au-dessus de tout le reste */
+    background-color: rgba(255, 255, 255, 0.4); /* Fond clair transparent pour marier avec votre univers blanc */
+    
+    /* Effet de flou sur le contenu arrière-plan */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    /* Active le défilement vertical pour les longues maquettes */
+    overflow-y: auto; 
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 25px;
+    right: 40px;
+    color: #000000;
+    font-size: 45px;
+    font-weight: 300;
+    cursor: pointer;
+    z-index: 1010;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.lightbox-close:hover {
+    color: #666666;
+    transform: scale(1.1);
+}
+
+.lightbox-content {
+    display: block;
+    width: 70%; /* Image configurée précisément à 70% de la largeur */
+    max-width: 1200px;
+    margin: 60px auto; /* Espaces fluides haut/bas */
+}
+
+.lightbox-content img {
+    width: 100%;
+    height: auto;
+    display: block;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+}
+
+/* Empêche le corps principal de faire un double scroll */
+body.lightbox-active {
+    overflow: hidden;
 }
