@@ -10,17 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
         soundToggle.addEventListener("click", () => {
             heroVideo.muted = !heroVideo.muted;
             soundToggle.classList.toggle("is-unmuted", !heroVideo.muted);
-
             if (!heroVideo.muted) {
                 heroVideo.play().catch(() => {});
             }
         });
     }
 
-
-    
     // ==========================================================================
-    // 1. GESTION TEXTES ET OUVERTURE DE LIGHTBOX
+    // 1. SURVOL DES TEXTES (METADATA) ET ANIMATION DE ZOOM AU CLIC
     // ==========================================================================
     const projectsData = [
         { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       
@@ -34,10 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const bookItems = document.querySelectorAll(".book-item");
     const metaTitle = document.getElementById("meta-title");
     const metaCategory = document.getElementById("meta-category");
-
-    const lightbox = document.getElementById("project-lightbox");
-    const lightboxImg = document.getElementById("lightbox-img");
-    const lightboxClose = document.querySelector(".lightbox-close");
+    const shelfContainer = document.querySelector(".shelf-container");
+    const overlay = document.getElementById("page-transition-overlay");
 
     function updateMeta(index) {
         if (metaTitle && metaCategory) {
@@ -54,67 +49,50 @@ document.addEventListener("DOMContentLoaded", () => {
     bookItems.forEach((book) => {
         const index = parseInt(book.getAttribute("data-index"), 10);
         
+        // Événements Hover (PC uniquement)
         book.addEventListener("mouseenter", () => {
-            if (window.innerWidth > 768) {
-                updateMeta(index);
-            }
+            if (window.innerWidth > 768) updateMeta(index);
         });
 
         book.addEventListener("mouseleave", () => {
-            if (window.innerWidth > 768) {
-                updateMeta(null);
-            }
+            if (window.innerWidth > 768) updateMeta(null);
         });
 
-        const coverElement = book.querySelector(".cover");
-        const mobileInfoElement = book.querySelector(".mobile-project-info");
+        // LOGIQUE DE CLIC : EFFET DE TRANSITION AVEC ZOOM IMMERSIF
+        book.addEventListener("click", function(e) {
+            const targetUrl = this.getAttribute("href");
 
-        const openProjectAction = (e) => {
-            e.preventDefault(); 
-            e.stopPropagation(); 
+            // Si le lien n'est pas configuré, on laisse le comportement par défaut
+            if (!targetUrl || targetUrl === "#") return;
+
+            e.preventDefault(); // Bloque le changement brutal de page
+
+            // Active les verrous CSS de transition globale
+            document.body.classList.add("zoom-active");
+            if (shelfContainer) shelfContainer.classList.add("zoom-active");
             
-            const imageUrl = book.getAttribute("data-image");
-            if (imageUrl && lightbox && lightboxImg) {
-                lightboxImg.src = imageUrl;
-                lightbox.style.display = "block";
-                document.body.classList.add("lightbox-active");
-            }
-        };
+            // Fixe l'élément au centre virtuel avant l'accélération matérielle
+            book.classList.add("zoomed-click");
+            
+            // Force le rafraîchissement d'affichage pour démarrer la transition de scale
+            requestAnimationFrame(() => {
+                book.classList.add("scale-up");
+            });
 
-        if (coverElement) {
-            coverElement.addEventListener("click", openProjectAction);
-        }
+            // Enclencher le rideau noir (Fade-in noir) pendant le grandissement
+            setTimeout(() => {
+                if (overlay) overlay.classList.add("fade-black");
+            }, 320);
 
-        if (mobileInfoElement) {
-            mobileInfoElement.addEventListener("click", openProjectAction);
-        }
-    });
-
-    if (lightbox && lightboxClose) {
-        lightboxClose.addEventListener("click", closeLightbox);
-        
-        lightbox.addEventListener("click", (e) => {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
+            // Redirection définitive vers la page dédiée du projet
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 750);
         });
-    }
-
-    function closeLightbox() {
-        if (lightbox) {
-            lightbox.style.display = "none";
-            document.body.classList.remove("lightbox-active");
-        }
-    }
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-            closeLightbox();
-        }
     });
 
     // ==========================================================================
-    // 2. INDICATEUR DE DE SURLIGNAGE DE BARRE DE NAVIGATION
+    // 2. INDICATEUR DE SURLIGNAGE DE LA BARRE DE NAVIGATION
     // ==========================================================================
     const navWrapper = document.querySelector(".nav-links-wrapper");
     const navLinks = document.querySelectorAll(".nav-link");
@@ -124,10 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!link || !indicator || !navWrapper) return;
         const wrapperRect = navWrapper.getBoundingClientRect();
         const linkRect = link.getBoundingClientRect();
-
         const leftPosition = linkRect.left - wrapperRect.left;
         const width = linkRect.width;
-
         indicator.style.left = `${leftPosition}px`;
         indicator.style.width = `${width}px`;
     }
@@ -136,23 +112,15 @@ document.addEventListener("DOMContentLoaded", () => {
         navLinks.forEach(link => {
             link.addEventListener("mouseenter", () => positionIndicator(link));
         });
-
         navWrapper.addEventListener("mouseleave", () => {
             const activeLink = document.querySelector(".nav-link.active");
-            if (activeLink) {
-                positionIndicator(activeLink);
-            } else {
-                indicator.style.width = "0px";
-            }
+            if (activeLink) positionIndicator(activeLink);
+            else indicator.style.width = "0px";
         });
-
-        const currentActive = document.querySelector(".nav-link.active");
-        if (currentActive) {
-            positionIndicator(currentActive);
-        }
     }
 });
 
+// Smooth Scroll fluide pour les ancres de la page d'accueil
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
@@ -160,20 +128,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         if (targetId === '#works') {
             e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
         const targetSection = document.querySelector(targetId);
         if (targetSection) {
             e.preventDefault(); 
-            targetSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     });
 });
