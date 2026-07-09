@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================================================
-    // 1. TEXTES DE LA BIBLIOTHÈQUE & GESTION LIGHTBOX (PROJETS)
+    // 1. GESTION TEXTES ET OUVERTURE DE LIGHTBOX (MODALE LOGIQUE)
     // ==========================================================================
     const projectsData = [
         { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       
@@ -49,11 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Comportements au survol et au clic
     bookItems.forEach((book) => {
         const index = parseInt(book.getAttribute("data-index"), 10);
         
-        // Survol pour l'affichage textuel (PC uniquement)
         book.addEventListener("mouseenter", () => {
             if (window.innerWidth > 768) {
                 updateMeta(index);
@@ -66,39 +64,39 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // ACTION DE CLIC CIBLÉE SUR LA COUVERTURE (.cover) ET LE CONTENU MOBILE
         const coverElement = book.querySelector(".cover");
         const mobileInfoElement = book.querySelector(".mobile-project-info");
 
         const openProjectAction = (e) => {
-            e.preventDefault(); 
-            e.stopPropagation(); // Évite tout conflit d'animation tridimensionnelle
-            
             const imageUrl = book.getAttribute("data-image");
-            if (imageUrl && lightbox && lightboxImg) {
+            
+            // Sécurité : n'ouvre la modale que s'il y a un lien valide configuré dans data-image !
+            if (!imageUrl || imageUrl.trim() === "") {
+                return; 
+            }
+
+            e.preventDefault(); 
+            e.stopPropagation(); 
+            
+            if (lightbox && lightboxImg) {
                 lightboxImg.src = imageUrl;
                 lightbox.style.display = "block";
                 document.body.classList.add("lightbox-active");
             }
         };
 
-        // Déclencheur sur la couverture (PC/Tablettes)
         if (coverElement) {
             coverElement.addEventListener("click", openProjectAction);
         }
 
-        // Déclencheur sur les infos en grille (Mobile)
         if (mobileInfoElement) {
             mobileInfoElement.addEventListener("click", openProjectAction);
         }
     });
 
-    // ÉVÉNEMENTS DE FERMETURE DE LA LIGHTBOX
     if (lightbox && lightboxClose) {
-        // Fermeture via la croix
         lightboxClose.addEventListener("click", closeLightbox);
         
-        // Fermeture en cliquant à côté du conteneur (sur le fond transparent flouté)
         lightbox.addEventListener("click", (e) => {
             if (e.target === lightbox) {
                 closeLightbox();
@@ -113,7 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Touche Échap du clavier
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
             closeLightbox();
@@ -121,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================================================
-    // 2. INDICATEUR DE DE SURLIGNAGE DU MENU BARRE NAV
+    // 2. INDICATEUR DE SURLIGNAGE DE BARRE DE NAVIGATION
     // ==========================================================================
     const navWrapper = document.querySelector(".nav-links-wrapper");
     const navLinks = document.querySelectorAll(".nav-link");
@@ -160,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Défilement fluide ancres inter-sections
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
