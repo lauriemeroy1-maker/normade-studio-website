@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================================================
-    // 1. SURVOL DES TEXTES (METADATA) ET ANIMATION DE ZOOM AU CLIC
+    // 1. SURVOL ET LOGIQUE INTERACTIVE DE DRAG & DROP (GRAVITÉ)
     // ==========================================================================
     const projectsData = [
         { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       
@@ -31,8 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const bookItems = document.querySelectorAll(".book-item");
     const metaTitle = document.getElementById("meta-title");
     const metaCategory = document.getElementById("meta-category");
-    const shelfContainer = document.querySelector(".shelf-container");
-    const overlay = document.getElementById("page-transition-overlay");
 
     function updateMeta(index) {
         if (metaTitle && metaCategory) {
@@ -46,41 +44,99 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Variables globales pour le moteur de drag & drop
+    let activeItem = null;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let hasMovedSignificant = false; // Permet de faire la diff entre un simple clic et un glissé
+
     bookItems.forEach((book) => {
         const index = parseInt(book.getAttribute("data-index"), 10);
+        const card = book.querySelector('.book-card');
         
         book.addEventListener("mouseenter", () => {
-            if (window.innerWidth > 768) updateMeta(index);
+            if (window.innerWidth > 768 && !isDragging) updateMeta(index);
         });
 
         book.addEventListener("mouseleave", () => {
-            if (window.innerWidth > 768) updateMeta(null);
+            if (window.innerWidth > 768 && !isDragging) updateMeta(null);
         });
 
-        // EFFET DE MULTI-TRANSITION IMMERSIVE AU CLIC
-        book.addEventListener("click", function(e) {
-            const targetUrl = this.getAttribute("href");
-            if (!targetUrl || targetUrl === "#") return;
+        // Empêcher l'action par défaut du lien au clic direct s'il y a eu déplacement
+        book.addEventListener("click", (e) => {
+            if (hasMovedSignificant) {
+                e.preventDefault();
+            }
+        });
 
-            e.preventDefault(); 
-
-            document.body.classList.add("zoom-active");
-            if (shelfContainer) shelfContainer.classList.add("zoom-active");
+        // Début du clic-hold
+        book.addEventListener("mousedown", (e) => {
+            if (window.innerWidth <= 768) return; // Désactivé sur mobile pour le scroll fluide
             
-            book.classList.add("zoomed-click");
+            // Ne s'active qu'avec le clic gauche principal
+            if (e.button !== 0) return;
+
+            activeItem = book;
+            isDragging = true;
+            hasMovedSignificant = false;
             
-            requestAnimationFrame(() => {
-                book.classList.add("scale-up");
-            });
+            book.classList.remove("returning");
+            book.classList.add("dragging");
 
-            setTimeout(() => {
-                if (overlay) overlay.classList.add("fade-black");
-            }, 320);
+            startX = e.clientX;
+            startY = e.clientY;
+            
+            e.preventDefault();
+        });
+    });
 
-            setTimeout(() => {
+    // Écoute globale des mouvements pour un drag fluide
+    window.addEventListener("mousemove", (e) => {
+        if (!isDragging || !activeItem) return;
+
+        const card = activeItem.querySelector('.book-card');
+        if (!card) return;
+
+        currentX = e.clientX - startX;
+        currentY = e.clientY - startY;
+
+        // Seuil physique pour valider l'action de drag
+        if (Math.abs(currentX) > 5 || Math.abs(currentY) > 5) {
+            hasMovedSignificant = true;
+        }
+
+        // Translation en temps réel sous la souris
+        card.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.04)`;
+    });
+
+    // Relâchement (effet Gravité / Ressort)
+    window.addEventListener("mouseup", () => {
+        if (!isDragging || !activeItem) return;
+
+        const card = activeItem.querySelector('.book-card');
+        
+        activeItem.classList.remove("dragging");
+        activeItem.classList.add("returning");
+
+        if (card) {
+            // Remise à zéro immédiate de la position (la physique amortie est gérée par la transition CSS .returning)
+            card.style.transform = `translate(0px, 0px)`;
+        }
+
+        // Si l'utilisateur a simplement fait un clic rapide sans déplacer l'élément, on suit le lien du projet
+        if (!hasMovedSignificant) {
+            const targetUrl = activeItem.getAttribute("href");
+            if (targetUrl && targetUrl !== "#") {
                 window.location.href = targetUrl;
-            }, 750);
-        });
+            }
+        }
+
+        // Reset des états
+        isDragging = false;
+        activeItem = null;
     });
 
     // ==========================================================================
@@ -112,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Déplacement fluide vers les ancres
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
