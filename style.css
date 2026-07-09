@@ -14,10 +14,6 @@ body {
     overflow-x: hidden;
 }
 
-body.zoom-active {
-    overflow: hidden; 
-}
-
 /* ==========================================================================
    HEADER & NAVIGATION
    ========================================================================== */
@@ -123,7 +119,7 @@ body.zoom-active {
 .sound-toggle.is-unmuted .icon-unmuted { display: inline; }
 
 /* ==========================================================================
-   WORKS LIBRARY SECTION (CORRIGÉ : TRANCHES VISIBLES & TITRE CENTRÉ)
+   WORKS LIBRARY SECTION (COUVERTURES UNIQUEMENT & GRAB INTERACTIF)
    ========================================================================== */
 .works-library-section {
     width: 100%;
@@ -137,19 +133,14 @@ body.zoom-active {
     width: 100%;
     max-width: 1400px;
     padding: 0 40px;
-    text-align: center; /* Aligne parfaitement le titre SELECTED WORKS au centre */
+    text-align: center;
 }
 
 .shelf-container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 35px; /* Plus d'espace pour casser l'effet accordéon */
+    gap: 35px;
     padding: 60px 10px;
-    perspective: 1200px; 
-}
-
-.shelf-container.zoom-active {
-    pointer-events: none;
 }
 
 .book-item {
@@ -157,57 +148,55 @@ body.zoom-active {
     color: inherit;
     display: block;
     position: relative;
-    cursor: pointer;
+    cursor: grab; /* Curseur main ouverte pour indiquer qu'on peut l'attraper */
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
+.book-item:active {
+    cursor: grabbing; /* Curseur main fermée quand on clique-hold */
+}
+
+/* Conteneur physique du livre géré par JS lors du drag */
 .book-card {
     width: 100%;
     aspect-ratio: 260 / 380;
     position: relative;
-    transform-style: preserve-3d;
-    /* Ajustement de la rotation pour voir la tranche à gauche et la couverture lisible */
-    transform: rotateY(25deg) rotateX(8deg); 
-    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+    will-change: transform;
+    z-index: 1;
+}
+
+/* Quand le livre est attrapé */
+.book-item.dragging .book-card {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    z-index: 50; 
+}
+
+/* Animation de transition fluide au moment de la relâche (effet ressort mécanique) */
+.book-item.returning .book-card {
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @media (min-width: 769px) {
-    .book-item:hover .book-card {
-        transform: rotateY(0deg) rotateX(0deg) scale(1.06) translateZ(30px);
+    .book-item:hover:not(.dragging) .book-card {
+        transform: scale(1.04) translateY(-5px);
     }
 }
 
-.book-side {
-    position: absolute;
-    top: 0;
+.cover {
+    width: 100%;
     height: 100%;
-    background-color: #fff;
-    box-shadow: 5px 5px 25px rgba(0,0,0,0.12);
+    display: block;
 }
 
-.book-side img {
+.cover img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-}
-
-/* La tranche se positionne sur le flanc gauche */
-.spine {
-    width: 40px;
-    left: 0;
-    transform: rotateY(-90deg);
-    transform-origin: left;
-    z-index: 2;
-    transition: opacity 0.4s ease;
-}
-
-/* La couverture fait face au spectateur */
-.cover {
-    width: 100%;
-    left: 0;
-    transform: translateZ(0px);
-    z-index: 1;
-    backface-visibility: hidden;
+    pointer-events: none; /* Évite que le navigateur tente de drag l'image par défaut */
 }
 
 .book-meta {
@@ -233,54 +222,6 @@ body.zoom-active {
 
 .mobile-project-info {
     display: none; 
-}
-
-/* ==========================================================================
-   LOGIQUE DE TRANSITION AU NOIR & ZOOM IMMERSIF
-   ========================================================================== */
-#page-transition-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: #000000;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease-in-out;
-}
-
-#page-transition-overlay.fade-black {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.book-item.zoomed-click {
-    position: fixed !important;
-    z-index: 9998 !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) scale(1) !important;
-    width: 260px !important;
-    height: 380px !important;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-.book-item.zoomed-click.scale-up {
-    transform: translate(-50%, -50%) scale(6) !important; 
-}
-
-.book-item.zoomed-click .spine {
-    opacity: 0 !important;
-}
-
-.book-item.zoomed-click .book-card {
-    transform: rotateY(0deg) rotateX(0deg) !important; 
-}
-
-.book-item.zoomed-click .mobile-project-info {
-    opacity: 0 !important;
 }
 
 /* ==========================================================================
@@ -527,7 +468,7 @@ body.zoom-active {
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN (TABLETTES & MOBILES CORRIGÉ)
+   RESPONSIVE DESIGN (MOBILES DESACTIVATION DU DRAG)
    ========================================================================== */
 @media (max-width: 1100px) {
     .shelf-container {
@@ -544,19 +485,16 @@ body.zoom-active {
     .shelf-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 25px;
-        perspective: none; 
     }
-    .book-card {
-        transform: none !important; 
+    .book-item {
+        cursor: pointer;
     }
-    .spine { display: none; } 
-    
-    .book-meta { display: none; } 
+    .book-meta { display: none; }
     
     .mobile-project-info {
         display: block;
         margin-top: 12px;
-        text-align: center; /* Centré également sur mobile */
+        text-align: center;
     }
     .mobile-project-info h3 {
         font-size: 14px;
