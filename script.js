@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ==========================================================================
-    // 0. GESTION DU SON DE LA VIDÉO HERO
+    // 0. TOGGLE SON DE LA VIDEO HERO
     // ==========================================================================
     const heroVideo = document.getElementById("heroVideo");
     const soundToggle = document.getElementById("soundToggle");
@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
         soundToggle.addEventListener("click", () => {
             heroVideo.muted = !heroVideo.muted;
             soundToggle.classList.toggle("is-unmuted", !heroVideo.muted);
+
+            // Certains navigateurs nécessitent un play() explicite après un changement de "muted"
             if (!heroVideo.muted) {
                 heroVideo.play().catch(() => {});
             }
@@ -17,15 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================================================
-    // 1. SYSTEME INTERACTIF DE GLISSEMENT DE COUVERTURE & GRAVITE RETOUR
+    // 1. DATA ET METADONNEES DE LA BIBLIOTHEQUE (6 PROJETS ALIGNÉS)
     // ==========================================================================
     const projectsData = [
-        { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       
-        { title: "SPORTS IN MOTION", category: "MOTION DESIGN — 2026" },     
-        { title: "THE KOREAN DREAM", category: "BRANDING & DESIGN" },         
-        { title: "VJING / MOTION", category: "AFTER EFFECTS — DIGITAL" },    
-        { title: "HANJI CRAFTSMANSHIP", category: "TRADITIONAL VISUALS" },   
-        { title: "NEW CREATIVE", category: "VISUAL ARTS & DESIGN" }          
+        { title: "SEOUL 100K", category: "FULL CREATIVE — DIRECTION" },       // Index 0
+        { title: "SPORTS IN MOTION", category: "MOTION DESIGN — 2026" },     // Index 1
+        { title: "THE KOREAN DREAM", category: "BRANDING & DESIGN" },         // Index 2
+        { title: "VJING / MOTION", category: "AFTER EFFECTS — DIGITAL" },    // Index 3
+        { title: "HANJI CRAFTSMANSHIP", category: "TRADITIONAL VISUALS" },   // Index 4
+        { title: "NEW CREATIVE", category: "VISUAL ARTS & DESIGN" }          // Index 5 (Nouveau)
     ];
 
     const bookItems = document.querySelectorAll(".book-item");
@@ -44,92 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    let activeItem = null;
-    let isDragging = false;
-    let startX = 0, startY = 0;
-    let currentX = 0, currentY = 0;
-    let hasMoved = false;
-
+    // Gestion du survol (PC)
     bookItems.forEach((book) => {
         const index = parseInt(book.getAttribute("data-index"), 10);
         
         book.addEventListener("mouseenter", () => {
-            if (window.innerWidth > 768 && !isDragging) updateMeta(index);
+            if (window.innerWidth > 768) {
+                updateMeta(index);
+            }
         });
 
         book.addEventListener("mouseleave", () => {
-            if (window.innerWidth > 768 && !isDragging) updateMeta(null);
-        });
-
-        // Bloque l'ouverture de lien si le livre a été déplacé
-        book.addEventListener("click", (e) => {
-            if (hasMoved) {
-                e.preventDefault();
+            if (window.innerWidth > 768) {
+                updateMeta(null);
             }
         });
-
-        book.addEventListener("mousedown", (e) => {
-            if (window.innerWidth <= 768) return; 
-            if (e.button !== 0) return; // Clic gauche uniquement
-
-            activeItem = book;
-            isDragging = true;
-            hasMoved = false;
-            
-            book.classList.remove("returning");
-            book.classList.add("dragging");
-
-            startX = e.clientX;
-            startY = e.clientY;
-            
-            e.preventDefault();
-        });
-    });
-
-    window.addEventListener("mousemove", (e) => {
-        if (!isDragging || !activeItem) return;
-
-        const card = activeItem.querySelector('.book-card');
-        if (!card) return;
-
-        currentX = e.clientX - startX;
-        currentY = e.clientY - startY;
-
-        if (Math.abs(currentX) > 6 || Math.abs(currentY) > 6) {
-            hasMoved = true;
-        }
-
-        // Déplace physiquement la carte sous le curseur
-        card.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.03)`;
-    });
-
-    window.addEventListener("mouseup", () => {
-        if (!isDragging || !activeItem) return;
-
-        const card = activeItem.querySelector('.book-card');
-        
-        activeItem.classList.remove("dragging");
-        activeItem.classList.add("returning");
-
-        if (card) {
-            // Relâchement : retour à l'origine avec la physique CSS cubique
-            card.style.transform = "translate(0px, 0px)";
-        }
-
-        // Si simple clic hold sans bouger d'un poil : ouvre le projet
-        if (!hasMoved) {
-            const targetUrl = activeItem.getAttribute("href");
-            if (targetUrl && targetUrl !== "#") {
-                window.location.href = targetUrl;
-            }
-        }
-
-        isDragging = false;
-        activeItem = null;
     });
 
     // ==========================================================================
-    // 2. INDICATEUR DE DE DE LA BARRE DE NAVIGATION
+    // 2. INDICATEUR DE SURLIGNAGE DU HEADER
     // ==========================================================================
     const navWrapper = document.querySelector(".nav-links-wrapper");
     const navLinks = document.querySelectorAll(".nav-link");
@@ -139,8 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!link || !indicator || !navWrapper) return;
         const wrapperRect = navWrapper.getBoundingClientRect();
         const linkRect = link.getBoundingClientRect();
+
         const leftPosition = linkRect.left - wrapperRect.left;
         const width = linkRect.width;
+
         indicator.style.left = `${leftPosition}px`;
         indicator.style.width = `${width}px`;
     }
@@ -149,10 +86,46 @@ document.addEventListener("DOMContentLoaded", () => {
         navLinks.forEach(link => {
             link.addEventListener("mouseenter", () => positionIndicator(link));
         });
+
         navWrapper.addEventListener("mouseleave", () => {
             const activeLink = document.querySelector(".nav-link.active");
-            if (activeLink) positionIndicator(activeLink);
-            else indicator.style.width = "0px";
+            if (activeLink) {
+                positionIndicator(activeLink);
+            } else {
+                indicator.style.width = "0px";
+            }
         });
+
+        const currentActive = document.querySelector(".nav-link.active");
+        if (currentActive) {
+            positionIndicator(currentActive);
+        }
     }
+});
+
+// Défilement fluide pour les ancres
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+
+        // Cas particulier : "Works" doit ramener tout en haut de la page (vidéo incluse)
+        if (targetId === '#works') {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            return;
+        }
+
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+            e.preventDefault(); 
+            targetSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
 });
