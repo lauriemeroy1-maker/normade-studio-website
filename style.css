@@ -281,7 +281,6 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 @media (max-width:720px){
   .works__grid{ grid-template-columns: 1fr; }
 }
-```[cite: 2, 3]
 
 /* PLANS / PRICING */
 .plans{ background:var(--cream); }
@@ -392,15 +391,14 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 /* RESPONSIVE */
 @media (max-width:1020px){
   .plans__grid{ grid-template-columns:1fr; max-width:460px; margin:0 auto; }
-  .works__grid{ grid-template-columns:1fr; }
-  .works__thumbs{ flex-direction:row; }
-  .works__thumb-list{ flex-direction:row; }
+  .works__grid{ grid-template-columns:repeat(2, 1fr); }
   .timeline{ grid-template-columns:repeat(2,1fr); row-gap:40px; }
   .timeline__line{ display:none; }
 }
 
 @media (max-width:720px){
   main > section{ padding:88px 20px; }
+  .works__grid{ grid-template-columns:1fr; }
 
   .nav__burger{ display:flex; }
   .nav__links{
@@ -411,18 +409,6 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
   .nav__links a{ font-size:22px; }
 
   .timeline{ grid-template-columns:1fr; row-gap:30px; }
-
-  .works__thumbs{ display:none; }
-  .works__thumb-rail{
-    display:flex; gap:12px; margin-top:16px; overflow-x:auto; padding-bottom:6px; scroll-snap-type:x mandatory;
-    -webkit-overflow-scrolling:touch;
-  }
-  .works__thumb-rail::-webkit-scrollbar{ display:none; }
-  .works__thumb-rail .works__thumb{
-    min-width:132px; min-height:88px; flex-shrink:0; scroll-snap-align:start;
-  }
-  .works__main-frame{ aspect-ratio:4/3.3; }
-  .works__main-caption{ max-width:100%; font-size:19px; }
 
   .plans__head{ flex-direction:column; gap:26px; }
 
