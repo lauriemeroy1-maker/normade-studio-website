@@ -198,7 +198,8 @@
   ];
 
   const WINDOW_SIZE = 3;
-  const AUTOPLAY_DELAY = 4800;
+  const AUTOPLAY_DELAY = 7500; // Ralenti à 7,5 secondes
+  const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
   const worksMedia = document.getElementById('worksMedia');
   const worksCaption = document.getElementById('worksCaption');
@@ -228,7 +229,6 @@
         btn.style.backgroundSize = 'cover';
         btn.style.backgroundPosition = 'center';
       }
-      // Suppression volontaire du mouseenter : seul le clic déclenche le changement
       btn.addEventListener('click', () => setActiveProject(idx, { pause: true }));
       thumbList.appendChild(btn);
     }
@@ -243,7 +243,9 @@
     const project = projects[activeIndex]; 
     const worksTag = document.getElementById('worksTag');
 
-    worksMedia.style.transition = 'opacity .25s ease'; 
+    // Fondu au blanc
+    worksMedia.style.backgroundColor = '#FFFFFF';
+    worksMedia.style.transition = 'opacity .35s ease'; 
     worksMedia.style.opacity = '0'; 
     
     setTimeout(() => {      
@@ -266,7 +268,7 @@
       }
 
       worksMedia.style.opacity = '1'; 
-    }, 220); 
+    }, 300); 
 
     if (worksIndexLabel) worksIndexLabel.textContent = `${pad2(activeIndex)} / ${pad2(projects.length - 1)}`;      
     renderThumbList(); 
@@ -310,18 +312,19 @@
   }      
 
   const startAutoplay = () => {    
-    if (reduceMotion) return; 
+    if (reduceMotion || isTouchDevice) return; 
     autoplayTimer = setInterval(() => {      
       setActiveProject(activeIndex + 1); 
     }, AUTOPLAY_DELAY); 
   }; 
 
   const restartAutoplay = () => {    
+    if (isTouchDevice) return;
     clearInterval(autoplayTimer); 
     startAutoplay(); 
   }; 
 
-  if (worksThumbsWrap) {    
+  if (worksThumbsWrap && !isTouchDevice) {    
     worksThumbsWrap.addEventListener('mouseenter', () => clearInterval(autoplayTimer)); 
     worksThumbsWrap.addEventListener('mouseleave', startAutoplay); 
   }      
