@@ -161,7 +161,7 @@
       caption: "Seoul100K ∙ Rebranding & event design",
       image: 'https://i.ibb.co/1GVXHVhh/WEBWORKS-01.png',
       thumbImage: 'https://i.ibb.co/Z1W3XPmC/WEBWORKS-02.png',
-      url: 'https://www.behance.net/gallery/252926093/FULL-BRANDING-Seoul100K-(2024-2025-2026)' // <--- Mets ton lien ici
+      url: 'https://www.behance.net/gallery/252926093/FULL-BRANDING-Seoul100K-(2024-2025-2026)'
     },
     {
       tag: '▶ Full Creative',
@@ -169,7 +169,7 @@
       image: 'https://i.ibb.co/jPdvJt5J/WEBWORKS-03.png',
       thumbImage: 'https://i.ibb.co/tMfh9sPt/WEBWORKS-04.png',
       gradient: 'linear-gradient(135deg, #050505, #21201c)',
-      url: 'https://www.behance.net/gallery/253011801/Sports-in-motion' // <--- Mets ton lien ici
+      url: 'https://www.behance.net/gallery/253011801/Sports-in-motion'
     },
     {
       tag: '▶ Brand Design',
@@ -177,7 +177,7 @@
       image: 'https://i.ibb.co/TMJH0W79/WEBWORKS-05.png',
       thumbImage: 'https://i.ibb.co/6JLjP4H7/WEBWORKS-06.png',
       gradient: 'linear-gradient(135deg, #050505, #1c1c1c)',
-      url: 'https://www.behance.net/ton-projet-3' // <--- Mets ton lien ici
+      url: 'https://www.behance.net/ton-projet-3'
     },
     {
       tag: '▶ Motion Flow',
@@ -185,7 +185,7 @@
       image: 'https://i.ibb.co/svV5ztFL/WEBWORKS-07.png',
       thumbImage: 'https://i.ibb.co/PGV9HT8V/WEBWORKS-08.png',
       gradient: 'linear-gradient(135deg, #050505, #262622)',
-      url: 'https://www.behance.net/gallery/252451175/VIJING-at-Running-Events' // <--- Mets ton lien ici
+      url: 'https://www.behance.net/gallery/252451175/VIJING-at-Running-Events'
     },
     {
       tag: '▶ Full Creative',
@@ -193,7 +193,7 @@
       image: 'https://i.ibb.co/84nm6yFr/WEBWORKS-09.png',
       thumbImage: 'https://i.ibb.co/fdByvW99/WEBWORKS-10.png',
       gradient: 'linear-gradient(135deg, #050505, #1e1e1e)',
-      url: 'https://www.behance.net/ton-projet-5' // <--- Mets ton lien ici
+      url: 'https://www.behance.net/ton-projet-5'
     }
   ];
 
@@ -228,8 +228,8 @@
         btn.style.backgroundSize = 'cover';
         btn.style.backgroundPosition = 'center';
       }
-      btn.addEventListener('click', () => setActiveProject(idx));
-      btn.addEventListener('mouseenter', () => setActiveProject(idx, { pause: true }));
+      // Suppression volontaire du mouseenter : seul le clic déclenche le changement
+      btn.addEventListener('click', () => setActiveProject(idx, { pause: true }));
       thumbList.appendChild(btn);
     }
   };
@@ -260,7 +260,6 @@
       if (worksCaption) worksCaption.textContent = project.caption; 
       if (worksTag) worksTag.textContent = project.tag; 
 
-      // Injection dynamique du lien pour la couverture cliquable
       const worksLink = document.getElementById('worksLink');
       if (worksLink && project.url) {
         worksLink.href = project.url;
