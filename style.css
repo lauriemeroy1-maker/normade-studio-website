@@ -79,7 +79,6 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 /* ============================================================
    NAV
    ============================================================ */
-/* 1. Aligner la navigation avec le même espacement que les sections */
 .nav{
   position: fixed; 
   top: 0; 
@@ -103,10 +102,10 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
   align-items: center; 
   gap: 8px; 
   position: relative;
-  top: 2px; /* Ajuste cette valeur (ex: 1px, 2px ou 3px) selon le rendu souhaité */
+  top: 2px;
 }
 .nav__mark{ 
-  height: 38px; /* Légèrement ajusté pour un meilleur équilibre optique avec le texte */
+  height: 38px; 
   width: auto; 
   max-width: none !important; 
   object-fit: contain;
@@ -117,13 +116,13 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 
 .nav__links{ 
   display: flex; 
-  gap: 36px; /* Légèrement resserré pour un groupe plus compact et dense face au logo */
+  gap: 36px;
 }
 .nav__links a{
   position: relative; 
   font-size: 14px; 
-  font-weight: 500; /* Assure un ancrage suffisant */
-  letter-spacing: 0.03em; /* Élargit subtilement le texte pour rééquilibrer la balance visuelle */
+  font-weight: 500; 
+  letter-spacing: 0.03em; 
   padding: 6px 0; 
   color: var(--black);
 }
@@ -266,7 +265,7 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
   inset: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Place la légende en bas de l'image */
+  justify-content: flex-end;
   padding: 24px;
   text-decoration: none;
   color: inherit;
@@ -283,11 +282,12 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
   position:relative; flex:1; border-radius:6px; overflow:hidden; min-height:76px;
   background:linear-gradient(135deg,#D8D6CE,#AFACA2);
   display:flex; align-items:center; justify-content:center; text-align:center;
-  transition:transform .35s var(--ease), box-shadow .35s;
+  transition:box-shadow .35s;
 }
 .works__thumb-label{ color:var(--black); font-family:var(--font-display); font-weight:700; font-size:15px; line-height:1.3; }
 .works__thumb::before{ content:''; position:absolute; inset:0; background:var(--black); opacity:0; transition:opacity .3s; }
-.works__thumb:hover{ transform:translateX(-4px); }
+/* Suppression complète du hover de déplacement sur les miniatures */
+.works__thumb:hover{ transform:none; }
 .works__thumb.is-active{ box-shadow:0 0 0 2px var(--black) inset; }
 .works__thumb.is-active::before{ opacity:.1; }
 
@@ -295,7 +295,6 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
   display:inline-flex; align-items:center; gap:8px; margin-top:36px; font-size:14px; font-weight:600;
   text-decoration:underline; text-underline-offset:4px;
 }
-
 .works__thumb-rail{ display:none; }
 
 /* ============================================================
@@ -305,15 +304,14 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 .plans__head{ 
   display: flex; 
   justify-content: space-between; 
-  align-items: flex-start; /* Aligne le haut des deux colonnes */
+  align-items: flex-start; 
   gap: 60px; 
   flex-wrap: wrap; 
   margin-bottom: 64px; 
 }
-
 .plans__head h2.section-title {
-  margin-top: 0; /* Supprime l'espace par défaut pour coller parfaitement au sommet */
-  line-height: 1; /* Évite les décalages liés à l'interligne */
+  margin-top: 0; 
+  line-height: 1; 
 }
 .plans__desc{ max-width:440px; }
 .plans__desc h3{ font-size:18px; font-weight:600; margin-bottom:12px; font-family:var(--font-body); }
@@ -376,14 +374,6 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
    PROCESS
    ============================================================ */
 .process{ background:var(--cream); text-align:center; }
-.process__notion{
-  display:inline-flex; align-items:center; gap:10px; margin:34px auto 64px; padding:10px 20px;
-  border:1px solid var(--line); border-radius:999px; font-size:13.5px; background:var(--white);
-}
-.process__notion-icon{
-  width:20px; height:20px; border:1.3px solid var(--black); border-radius:4px; display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-display); font-size:11px; font-weight:700;
-}
 .process__steps{ display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; max-width:900px; margin:0 auto; }
 .process__step{
   text-align:left; max-width:230px; padding:24px; background:var(--white); border:1px solid var(--line); border-radius:12px;
