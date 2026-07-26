@@ -264,10 +264,11 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 }
 
 .works__more{
-  display: inline-flex; 
+  display: flex; 
   align-items: center; 
   gap: 8px; 
-  margin-top: 48px; 
+  margin: 48px auto 0 auto; /* Remplace margin-top par auto sur les côtés gauche et droit */
+  width: fit-content;        /* S'assure que le conteneur s'adapte à la taille du texte pour bien se centrer */
   font-size: 14px; 
   font-weight: 600;
   text-decoration: underline; 
