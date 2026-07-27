@@ -160,7 +160,7 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 /* Ajustement de la vidéo et du hero sur mobile pour enlever les bandes noires */
 @media (max-width: 720px) {
   .hero {
-    min-height: 100svh;
+    min-height: 480svh;
     padding: 20px 0;
   }
   
