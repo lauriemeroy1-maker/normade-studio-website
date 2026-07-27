@@ -157,10 +157,15 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
   object-fit: cover; /* Par défaut sur PC */
 }
 
-/* Sur mobile, on change pour éviter le crop */
+/* Ajustement de la vidéo et du hero sur mobile pour enlever les bandes noires */
 @media (max-width: 720px) {
+  .hero {
+    min-height: 50svh;
+    padding: 20px 0;
+  }
+  
   .hero__video {
-    object-fit: contain;
+    object-fit: cover;
   }
 }
 .hero__sound-toggle{
