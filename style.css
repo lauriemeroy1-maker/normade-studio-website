@@ -443,31 +443,30 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 
 
 /* ABOUT END SECTION */
-.about-end {
+.about-dark {
   background: #1a1a1a;
   color: #b0b0b0;
   padding: 100px clamp(20px, 6vw, 80px);
   text-align: center;
 }
 
-.about-end__inner {
-  max-width: 700px;
+.about-dark__inner {
+  max-width: 820px;
   margin: 0 auto;
 }
 
-.about-end__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(24px, 3vw, 32px);
+.about-dark .vision__story h3 {
   color: #ffffff;
-  margin-bottom: 24px;
-  letter-spacing: -0.01em;
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-family: var(--font-body);
 }
 
-.about-end__text {
-  font-family: var(--font-body);
+.about-dark .vision__story p {
+  color: #b0b0b0;
   font-size: 16px;
   line-height: 1.7;
-  color: #b0b0b0;
-  margin: 0;
+  max-width: 620px;
+  margin: 0 auto;
 }
