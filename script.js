@@ -27,11 +27,11 @@
     document.body.style.overflow = '';
   }));
 
-  const sections = ['vision', 'works', 'plans', 'process', 'contact', 'about'].map(id => document.getElementById(id));
+  const sections = ['vision', 'works', 'plans', 'process', 'contact'].map(id => document.getElementById(id));
   const navAnchors = Array.from(navLinks.querySelectorAll('a'));
   const setActiveLink = () => {
     let current = sections[0];
-    sections.forEach(sec => { if (window.scrollY + window.innerHeight * 0.4 >= sec.offsetTop) current = sec; });
+    sections.forEach(sec => { if (sec && window.scrollY + window.innerHeight * 0.4 >= sec.offsetTop) current = sec; });
     navAnchors.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + current.id));
   };
   window.addEventListener('scroll', setActiveLink, { passive: true });
