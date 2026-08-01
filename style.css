@@ -135,7 +135,7 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 .nav__burger.is-open span:first-child{ transform:translateY(3.3px) rotate(45deg); }
 .nav__burger.is-open span:last-child{ transform:translateY(-3.3px) rotate(-45deg); }
 
-/* HERO */
+/* HERO - Corrigé PC & Mobile */
 .hero{
   position: relative; 
   width: 100%;
@@ -188,6 +188,16 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 .hero__scroll--black{ color:var(--black); }
 .hero__scroll--black span{ background:linear-gradient(var(--black), transparent); }
 @keyframes scroll-move{ 0%{ transform:scaleY(0); transform-origin:top;} 50%{ transform:scaleY(1); transform-origin:top;} 51%{ transform-origin:bottom;} 100%{ transform:scaleY(0); transform-origin:bottom;} }
+
+@media (max-width: 720px) {
+  .hero {
+    height: 56.25vw;
+    aspect-ratio: 16 / 9;
+  }
+  .hero__video {
+    object-fit: cover;
+  }
+}
 
 main > section{ padding:120px clamp(20px,6vw,80px); }
 .section-title{ font-size:clamp(30px,5vw,44px); font-weight:700; }
