@@ -440,3 +440,34 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 
   .field label{ text-align:left; }
 }
+
+
+/* ABOUT END SECTION */
+.about-end {
+  background: #1a1a1a;
+  color: #b0b0b0;
+  padding: 100px clamp(20px, 6vw, 80px);
+  text-align: center;
+}
+
+.about-end__inner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.about-end__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(24px, 3vw, 32px);
+  color: #ffffff;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+.about-end__text {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: #b0b0b0;
+  margin: 0;
+}
