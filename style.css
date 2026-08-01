@@ -401,7 +401,7 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 .field input:focus, .field textarea:focus{ border-color:var(--black); box-shadow:0 0 0 3px rgba(0,0,0,0.06); }
 .contact__form .btn-pill{ align-self:center; margin-top:6px; min-width:160px; }
 
-/* ABOUT / 소개 */
+/* ABOUT / 소개 (Modifié uniquement pour les couleurs demandées) */
 .about{
   background: #eaeaea;
   color: #919191;
@@ -434,7 +434,7 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
   font-size: 13px;
   color: #919191;
   font-style: italic;
-  margin: 24px 0 0 0;
+  margin: 0;
   font-family: var(--font-body);
 }
 
