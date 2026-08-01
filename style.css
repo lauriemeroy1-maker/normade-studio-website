@@ -401,10 +401,10 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 .field input:focus, .field textarea:focus{ border-color:var(--black); box-shadow:0 0 0 3px rgba(0,0,0,0.06); }
 .contact__form .btn-pill{ align-self:center; margin-top:6px; min-width:160px; }
 
-/* ABOUT / 소개 */
+/* ABOUT / 소개 (MODIFIÉ : Fond #eaeaea et texte #919191) */
 .about{
-  background: var(--black);
-  color: var(--white);
+  background: #eaeaea;
+  color: #919191;
   padding: 120px clamp(20px, 6vw, 80px);
   text-align: center;
 }
@@ -417,25 +417,28 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: var(--white);
+  color: #919191;
 }
 .about__text{
   font-family: var(--font-body);
   font-size: 14.5px;
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.75);
+  color: #919191;
   margin: 0 0 16px 0;
+  opacity: 0.85;
 }
 .about__text strong{
-  color: var(--white);
+  color: #919191;
   font-weight: 600;
+  opacity: 1;
 }
 .about__quote{
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.45);
+  color: #919191;
   font-style: italic;
   margin: 0;
   font-family: var(--font-body);
+  opacity: 0.6;
 }
 
 /* FOOTER */
