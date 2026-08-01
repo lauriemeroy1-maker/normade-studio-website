@@ -135,7 +135,7 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 .nav__burger.is-open span:first-child{ transform:translateY(3.3px) rotate(45deg); }
 .nav__burger.is-open span:last-child{ transform:translateY(-3.3px) rotate(-45deg); }
 
-/* HERO - Corrigé PC & Mobile */
+/* HERO */
 .hero{
   position: relative; 
   width: 100%;
@@ -201,6 +201,65 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 
 main > section{ padding:120px clamp(20px,6vw,80px); }
 .section-title{ font-size:clamp(30px,5vw,44px); font-weight:700; }
+
+/* ABOUT / 소개 */
+.about{
+  background: var(--black);
+  color: var(--white);
+  padding: 140px clamp(20px, 6vw, 80px);
+  position: relative;
+  overflow: hidden;
+}
+.about__inner{
+  max-width: 900px;
+  margin: 0 auto;
+}
+.about__text{
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.2vw, 40px);
+  line-height: 1.4;
+  font-weight: 700;
+  margin: 0 0 40px 0;
+  letter-spacing: -0.01em;
+}
+.about__text span{
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* SCRIBBLE ANIMATION */
+.about__text span svg {
+  position: absolute;
+  left: -4%;
+  bottom: -6%;
+  width: 108%;
+  height: 35%;
+  pointer-events: none;
+  overflow: visible;
+}
+.about__text span svg path {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 4px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  transition: stroke-dashoffset 1.2s var(--ease);
+}
+.about.is-visible .about__text span svg path {
+  stroke-dashoffset: 0;
+}
+
+.about__quote{
+  font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+  font-style: italic;
+  font-family: var(--font-body);
+}
 
 /* VISION */
 .vision{ background:var(--cream); }
