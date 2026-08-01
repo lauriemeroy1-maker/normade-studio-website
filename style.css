@@ -406,58 +406,35 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
   background: var(--black);
   color: var(--white);
   padding: 120px clamp(20px, 6vw, 80px);
-  position: relative;
-  overflow: hidden;
+  text-align: center;
 }
 .about__inner{
-  max-width: 720px;
+  max-width: 520px;
   margin: 0 auto;
+}
+.about__title{
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--white);
 }
 .about__text{
   font-family: var(--font-body);
-  font-size: clamp(16px, 1.8vw, 19px);
-  line-height: 1.7;
-  font-weight: 400;
-  margin: 0 0 32px 0;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 16px 0;
 }
-.about__text span{
-  position: relative;
-  display: inline;
-  font-weight: 600;
+.about__text strong{
   color: var(--white);
+  font-weight: 600;
 }
-
-/* SCRIBBLE ANIMATION */
-.about__text span svg {
-  position: absolute;
-  left: -2%;
-  bottom: -10px;
-  width: 104%;
-  height: 14px;
-  pointer-events: none;
-  overflow: visible;
-}
-.about__text span svg path {
-  fill: none;
-  stroke: var(--white);
-  stroke-width: 2.5px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 400;
-  stroke-dashoffset: 400;
-  transition: stroke-dashoffset 1.2s var(--ease);
-}
-.about.is-visible .about__text span svg path {
-  stroke-dashoffset: 0;
-}
-
 .about__quote{
-  font-size: clamp(14px, 1.5vw, 16px);
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.6);
-  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
   font-style: italic;
+  margin: 0;
   font-family: var(--font-body);
 }
 
