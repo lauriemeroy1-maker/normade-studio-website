@@ -27,7 +27,7 @@
     document.body.style.overflow = '';
   }));
 
-  const sections = ['about', 'vision', 'works', 'plans', 'process', 'contact'].map(id => document.getElementById(id));
+  const sections = ['vision', 'works', 'plans', 'process', 'contact', 'about'].map(id => document.getElementById(id));
   const navAnchors = Array.from(navLinks.querySelectorAll('a'));
   const setActiveLink = () => {
     let current = sections[0];
