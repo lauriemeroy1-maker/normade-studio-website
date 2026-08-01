@@ -27,7 +27,7 @@
     document.body.style.overflow = '';
   }));
 
-  const sections = ['vision', 'works', 'plans', 'process', 'contact'].map(id => document.getElementById(id));
+  const sections = ['about', 'vision', 'works', 'plans', 'process', 'contact'].map(id => document.getElementById(id));
   const navAnchors = Array.from(navLinks.querySelectorAll('a'));
   const setActiveLink = () => {
     let current = sections[0];
@@ -180,14 +180,6 @@
       url: 'https://www.behance.net/ton-projet-3'
     },
     {
-      tag: '▶ Brand Design',
-      caption: 'Honey Turtle ∙ Brand Development for International Market',
-      image: 'https://i.ibb.co/TMJH0W79/WEBWORKS-05.png',
-      thumbImage: 'https://i.ibb.co/6JLjP4H7/WEBWORKS-06.png',
-      gradient: 'linear-gradient(135deg, #050505, #1c1c1c)',
-      url: 'https://www.behance.net/ton-projet-3'
-    },
-    {
       tag: '▶ Motion Flow',
       caption: 'Marathon Video ∙ Teaser, LED Vjing, Motion graphics for Sports Events',
       image: 'https://i.ibb.co/svV5ztFL/WEBWORKS-07.png',
@@ -206,7 +198,7 @@
   ];
 
   const WINDOW_SIZE = 3;
-  const AUTOPLAY_DELAY = 7500; // Ralenti à 7,5 secondes
+  const AUTOPLAY_DELAY = 7500;
   const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
   const worksMedia = document.getElementById('worksMedia');
@@ -251,32 +243,33 @@
     const project = projects[activeIndex]; 
     const worksTag = document.getElementById('worksTag');
 
-    // Fondu au blanc
-    worksMedia.style.backgroundColor = '#FFFFFF';
-    worksMedia.style.transition = 'opacity .35s ease'; 
-    worksMedia.style.opacity = '0'; 
-    
-    setTimeout(() => {      
-      if (project.image) {
-        worksMedia.style.backgroundImage = `url("${project.image}")`;
-        worksMedia.style.backgroundSize = 'cover';
-        worksMedia.style.backgroundPosition = 'center';
-        worksMedia.style.backgroundRepeat = 'no-repeat';
-      } else {
-        worksMedia.style.backgroundImage = 'none';
-        worksMedia.style.background = project.gradient; 
-      }
+    if (worksMedia) {
+      worksMedia.style.backgroundColor = '#FFFFFF';
+      worksMedia.style.transition = 'opacity .35s ease'; 
+      worksMedia.style.opacity = '0'; 
+      
+      setTimeout(() => {      
+        if (project.image) {
+          worksMedia.style.backgroundImage = `url("${project.image}")`;
+          worksMedia.style.backgroundSize = 'cover';
+          worksMedia.style.backgroundPosition = 'center';
+          worksMedia.style.backgroundRepeat = 'no-repeat';
+        } else {
+          worksMedia.style.backgroundImage = 'none';
+          worksMedia.style.background = project.gradient; 
+        }
 
-      if (worksCaption) worksCaption.textContent = project.caption; 
-      if (worksTag) worksTag.textContent = project.tag; 
+        if (worksCaption) worksCaption.textContent = project.caption; 
+        if (worksTag) worksTag.textContent = project.tag; 
 
-      const worksLink = document.getElementById('worksLink');
-      if (worksLink && project.url) {
-        worksLink.href = project.url;
-      }
+        const worksLink = document.getElementById('worksLink');
+        if (worksLink && project.url) {
+          worksLink.href = project.url;
+        }
 
-      worksMedia.style.opacity = '1'; 
-    }, 300); 
+        worksMedia.style.opacity = '1'; 
+      }, 300); 
+    }
 
     if (worksIndexLabel) worksIndexLabel.textContent = `${pad2(activeIndex)} / ${pad2(projects.length - 1)}`;      
     renderThumbList(); 
@@ -337,7 +330,7 @@
     worksThumbsWrap.addEventListener('mouseleave', startAutoplay); 
   }      
 
-  setActiveProject(0); 
+  if (projects.length > 0) setActiveProject(0); 
   startAutoplay();
 
   /* ---------------------------------------------------------
