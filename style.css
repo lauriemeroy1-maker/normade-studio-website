@@ -135,7 +135,7 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spa
 .nav__burger.is-open span:first-child{ transform:translateY(3.3px) rotate(45deg); }
 .nav__burger.is-open span:last-child{ transform:translateY(-3.3px) rotate(-45deg); }
 
-/* HERO */
+/* HERO - Corrigé PC & Mobile */
 .hero{
   position: relative; 
   width: 100%;
@@ -400,43 +400,6 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 }
 .field input:focus, .field textarea:focus{ border-color:var(--black); box-shadow:0 0 0 3px rgba(0,0,0,0.06); }
 .contact__form .btn-pill{ align-self:center; margin-top:6px; min-width:160px; }
-
-/* ABOUT / 소개 (Modifié uniquement pour les couleurs demandées) */
-.about{
-  background: #eaeaea;
-  color: #919191;
-  padding: 120px clamp(20px, 6vw, 80px);
-  text-align: center;
-}
-.about__inner{
-  max-width: 520px;
-  margin: 0 auto;
-}
-.about__title{
-  font-family: var(--font-display);
-  font-size: clamp(30px, 5vw, 44px);
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #919191;
-}
-.about__text{
-  font-family: var(--font-body);
-  font-size: 14.5px;
-  line-height: 1.65;
-  color: #919191;
-  margin: 0 0 16px 0;
-}
-.about__text strong{
-  color: #919191;
-  font-weight: 600;
-}
-.about__quote{
-  font-size: 13px;
-  color: #919191;
-  font-style: italic;
-  margin: 0;
-  font-family: var(--font-body);
-}
 
 /* FOOTER */
 .footer{ background:var(--black); color:var(--cream); padding:80px 24px 40px; }
