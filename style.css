@@ -444,9 +444,9 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 
 /* ABOUT END SECTION */
 .about-dark {
-  background: #1a1a1a;
-  color: #b0b0b0;
-  padding: 100px clamp(20px, 6vw, 80px);
+  background: #eaeaea;
+  color: #919191;
+  padding: 80px clamp(20px, 6vw, 80px);
   text-align: center;
 }
 
@@ -456,7 +456,7 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 }
 
 .about-dark .vision__story h3 {
-  color: #ffffff;
+  color: #000000;
   font-size: 19px;
   font-weight: 600;
   margin-bottom: 16px;
@@ -464,7 +464,7 @@ main > section{ padding:120px clamp(20px,6vw,80px); }
 }
 
 .about-dark .vision__story p {
-  color: #b0b0b0;
+  color: #919191;
   font-size: 16px;
   line-height: 1.7;
   max-width: 620px;
