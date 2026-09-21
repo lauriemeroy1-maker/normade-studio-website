@@ -34,7 +34,8 @@
   const setActiveLink = () => {
     let current = sections[0];
     sections.forEach(sec => { if (sec && window.scrollY + window.innerHeight * 0.4 >= sec.offsetTop) current = sec; });
-    navAnchors.forEach(a => a.classList.toggle('is-active', a.getAttribute('href'] === '#' + current.id));
+    // CORRECTION ICI : Remplacement du crochet fermant erroné par une parenthèse
+    navAnchors.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + current.id));
   };
   window.addEventListener('scroll', setActiveLink, { passive: true });
   setActiveLink();
@@ -95,7 +96,6 @@
   --------------------------------------------------------- */
   let youtubePlayer;
 
-  // Fonction globale appelée automatiquement par l'API YouTube Iframe
   window.onYouTubeIframeAPIReady = function() {
     youtubePlayer = new YT.Player('heroYouTubeVideo', {
       videoId: 'M3EGOZGR5K0',
@@ -119,7 +119,7 @@
   };
 
   function onPlayerReady(event) {
-    event.target.mute(); // Muet par défaut pour autoriser l'autoplay sur les navigateurs
+    event.target.mute();
     event.target.playVideo();
 
     const soundToggle = document.getElementById('soundToggle');
@@ -143,7 +143,6 @@
     }
   }
 
-  // Chargement dynamique du script de l'API YouTube
   const tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   const firstScriptTag = document.getElementsByTagName('script')[0];
