@@ -34,7 +34,6 @@
   const setActiveLink = () => {
     let current = sections[0];
     sections.forEach(sec => { if (sec && window.scrollY + window.innerHeight * 0.4 >= sec.offsetTop) current = sec; });
-    // CORRECTION ICI : Remplacement du crochet fermant erroné par une parenthèse
     navAnchors.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + current.id));
   };
   window.addEventListener('scroll', setActiveLink, { passive: true });
