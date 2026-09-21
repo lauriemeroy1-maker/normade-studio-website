@@ -14,25 +14,27 @@
   onScrollNav();
   window.addEventListener('scroll', onScrollNav, { passive: true });
 
-  burger.addEventListener('click', () => {
-    const open = navLinks.classList.toggle('is-open');
-    burger.classList.toggle('is-open', open);
-    burger.setAttribute('aria-expanded', String(open));
-    document.body.style.overflow = open ? 'hidden' : '';
-  });
-  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    navLinks.classList.remove('is-open');
-    burger.classList.remove('is-open');
-    burger.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  }));
+  if (burger && navLinks) {
+    burger.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('is-open');
+      burger.classList.toggle('is-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      burger.classList.remove('is-open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }));
+  }
 
   const sections = ['vision', 'works', 'plans', 'process', 'contact'].map(id => document.getElementById(id));
-  const navAnchors = Array.from(navLinks.querySelectorAll('a'));
+  const navAnchors = navLinks ? Array.from(navLinks.querySelectorAll('a')) : [];
   const setActiveLink = () => {
     let current = sections[0];
     sections.forEach(sec => { if (sec && window.scrollY + window.innerHeight * 0.4 >= sec.offsetTop) current = sec; });
-    navAnchors.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + current.id));
+    navAnchors.forEach(a => a.classList.toggle('is-active', a.getAttribute('href'] === '#' + current.id));
   };
   window.addEventListener('scroll', setActiveLink, { passive: true });
   setActiveLink();
@@ -42,6 +44,7 @@
   --------------------------------------------------------- */
   const progressBar = document.getElementById('progressBar');
   const onScrollProgress = () => {
+    if (!progressBar) return;
     const h = document.documentElement;
     const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
     progressBar.style.width = scrolled + '%';
@@ -53,7 +56,7 @@
      Custom cursor dot (desktop / mouse only)
   --------------------------------------------------------- */
   const cursorDot = document.getElementById('cursorDot');
-  if (window.matchMedia('(hover:hover)').matches) {
+  if (cursorDot && window.matchMedia('(hover:hover)').matches) {
     let cx = 0, cy = 0, dx = 0, dy = 0;
     window.addEventListener('mousemove', e => {
       cx = e.clientX; cy = e.clientY;
@@ -88,22 +91,63 @@
   }
 
   /* ---------------------------------------------------------
-     Hero video sound toggle
+     Hero YouTube video integration & sound toggle (ID: M3EGOZGR5K0)
   --------------------------------------------------------- */
-  const soundToggle = document.getElementById('soundToggle');
-  const heroVideo = document.querySelector('.hero__video');
-  if (soundToggle && heroVideo) {
-    const iconOff = soundToggle.querySelector('.icon-sound-off');
-    const iconOn = soundToggle.querySelector('.icon-sound-on');
+  let youtubePlayer;
 
-    soundToggle.addEventListener('click', () => {
-      heroVideo.muted = !heroVideo.muted;
-      const isMuted = heroVideo.muted;
-      iconOff.style.display = isMuted ? 'block' : 'none';
-      iconOn.style.display = isMuted ? 'none' : 'block';
-      soundToggle.setAttribute('aria-label', isMuted ? 'Activer le son' : 'Désactiver le son');
+  // Fonction globale appelée automatiquement par l'API YouTube Iframe
+  window.onYouTubeIframeAPIReady = function() {
+    youtubePlayer = new YT.Player('heroYouTubeVideo', {
+      videoId: 'M3EGOZGR5K0',
+      playerVars: {
+        'autoplay': 1,
+        'autohide': 1,
+        'modestbranding': 1,
+        'rel': 0,
+        'showinfo': 0,
+        'controls': 0,
+        'disablekb': 1,
+        'enablejsapi': 1,
+        'iv_load_policy': 3,
+        'loop': 1,
+        'playlist': 'M3EGOZGR5K0'
+      },
+      events: {
+        'onReady': onPlayerReady
+      }
     });
+  };
+
+  function onPlayerReady(event) {
+    event.target.mute(); // Muet par défaut pour autoriser l'autoplay sur les navigateurs
+    event.target.playVideo();
+
+    const soundToggle = document.getElementById('soundToggle');
+    if (soundToggle) {
+      const iconOff = soundToggle.querySelector('.icon-sound-off');
+      const iconOn = soundToggle.querySelector('.icon-sound-on');
+
+      soundToggle.addEventListener('click', () => {
+        if (youtubePlayer.isMuted()) {
+          youtubePlayer.unMute();
+          if (iconOff) iconOff.style.display = 'none';
+          if (iconOn) iconOn.style.display = 'block';
+          soundToggle.setAttribute('aria-label', 'Désactiver le son');
+        } else {
+          youtubePlayer.mute();
+          if (iconOff) iconOff.style.display = 'block';
+          if (iconOn) iconOn.style.display = 'none';
+          soundToggle.setAttribute('aria-label', 'Activer le son');
+        }
+      });
+    }
   }
+
+  // Chargement dynamique du script de l'API YouTube
+  const tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
   /* ---------------------------------------------------------
      Scroll reveals (IntersectionObserver)
@@ -141,15 +185,17 @@
     }, { threshold: 0.5 });
     timelineItems.forEach(item => tio.observe(item));
 
-    const fio = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          timelineFill.style.width = '100%';
-          fio.disconnect();
-        }
-      });
-    }, { threshold: 0.3 });
-    fio.observe(timeline);
+    if (timelineFill) {
+      const fio = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            timelineFill.style.width = '100%';
+            fio.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+      fio.observe(timeline);
+    }
   }
 
   /* ---------------------------------------------------------
@@ -174,11 +220,13 @@
     contactForm.addEventListener('submit', e => {
       e.preventDefault();
       const btn = contactForm.querySelector('.btn-pill');
-      btn.classList.add('is-sent');
-      setTimeout(() => {
-        btn.classList.remove('is-sent');
-        contactForm.reset();
-      }, 2200);
+      if (btn) {
+        btn.classList.add('is-sent');
+        setTimeout(() => {
+          btn.classList.remove('is-sent');
+          contactForm.reset();
+        }, 2200);
+      }
     });
   }
 
