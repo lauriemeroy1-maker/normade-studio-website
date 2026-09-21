@@ -36,22 +36,22 @@
 
   <!-- HERO -->
   <section class="hero" id="hero">
-    <div class="hero__video-wrap" aria-hidden="true">
-      <video class="hero__video" autoplay muted loop playsinline>
-        <source src="https://res.cloudinary.com/n3poe46y/video/upload/v1785823005/NORMADE_Showreel2026_pei5ot.mp4" type="video/mp4">
-      </video>
+    <div class="hero__video-wrap" aria-hidden="true" id="youtubePlayerContainer">
+      <div id="heroYouTubeVideo"></div>
     </div>
+    
     <button class="hero__sound-toggle" id="soundToggle" aria-label="Activer le son">
       <svg class="icon-sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
       <svg class="icon-sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
     </button>
+    
     <div class="hero__grain" aria-hidden="true"></div>
     <div class="hero__glow" id="heroGlow" aria-hidden="true"></div>
     <div class="hero__scroll hero__scroll--black" aria-hidden="true">
       <span></span>
       <p>scroll</p>
     </div>
-  </section>
+</section>
 
   <!-- VISION -->
   <section class="vision" id="vision">
