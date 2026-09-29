@@ -109,7 +109,8 @@
         'enablejsapi': 1,
         'iv_load_policy': 3,
         'loop': 1,
-        'playlist': 'M3EGOZGR5K0'
+        'playlist': 'M3EGOZGR5K0',
+        'vq': 'hd1080'
       },
       events: {
         'onReady': onPlayerReady
@@ -118,6 +119,8 @@
   };
 
   function onPlayerReady(event) {
+    // Force la qualité maximale à 1080p dès le chargement du lecteur
+    event.target.setPlaybackQuality('hd1080');
     event.target.mute();
     event.target.playVideo();
 
